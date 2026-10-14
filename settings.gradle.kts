@@ -23,5 +23,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ShoppingList"
+
+includeBuild("build-logic")
+
 include(":app")
- 

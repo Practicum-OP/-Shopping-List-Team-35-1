@@ -1,0 +1,19 @@
+# Локальные настройки IDE
+*.iml
+/.idea/
+.DS_Store
+
+# Локальные настройки Android SDK
+/local.properties
+
+# Служебные папки и результаты сборки
+.gradle/
+.kotlin/
+**/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Ключи подписи приложения
+*.jks
+*.keystore

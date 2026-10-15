@@ -1,5 +1,8 @@
 [versions]
 # Build constants
+compileSdk = "37"
+minSdk = "26"
+targetSdk = "36"
 java = "VERSION_11"
 
 agp = "9.2.1"

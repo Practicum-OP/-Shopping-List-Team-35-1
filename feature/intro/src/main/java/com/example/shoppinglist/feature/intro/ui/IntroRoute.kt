@@ -4,9 +4,13 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun IntroRoute(
-    onOpenList: () -> Unit,
+    onOpenLogin: () -> Unit,
+    onOpenRegistration: () -> Unit,
+    onOpenRecovery: () -> Unit,
 ) {
     IntroScreen(
-        onContinueClick = onOpenList,
+        onLoginClick = onOpenLogin,
+        onRegistrationClick = onOpenRegistration,
+        onRecoveryClick = onOpenRecovery,
     )
 }

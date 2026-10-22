@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":feature:intro"))
     implementation(project(":feature:lists"))
     implementation(project(":feature:listdetail"))
+    implementation(project(":feature:auth"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

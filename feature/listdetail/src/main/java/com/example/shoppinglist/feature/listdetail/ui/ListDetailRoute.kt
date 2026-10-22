@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ListDetailRoute(
-    onBackToList: () -> Unit,
+    onBackToLists: () -> Unit,
 ) {
     ListDetailScreen(
-        onBackClick = onBackToList,
+        onBackClick = onBackToLists,
     )
 }

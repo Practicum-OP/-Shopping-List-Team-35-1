@@ -1,0 +1,17 @@
+<resources>
+    <!-- Кнопки диалогов -->
+    <string name="common_cancel">Отмена</string>
+    <string name="common_create">Создать</string>
+    <string name="common_rename">Переименовать</string>
+    <string name="common_delete">Удалить</string>
+
+    <!-- contentDescription общих иконок -->
+    <string name="common_back">Назад</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_clear">Очистить</string>
+    <string name="common_done">Готово</string>
+    <string name="common_add">Добавить</string>
+    <string name="common_edit">Редактировать</string>
+    <string name="common_copy">Копировать</string>
+    <string name="common_more">Ещё</string>
+</resources>

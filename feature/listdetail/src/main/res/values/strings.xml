@@ -1,0 +1,41 @@
+<resources>
+    <!-- Пустое состояние -->
+    <string name="list_detail_empty_title">В списке покупок пока пусто</string>
+    <string name="list_detail_empty_description">Нажмите на кнопку + ниже, чтобы добавить товары</string>
+
+    <!-- Добавление и редактирование товара -->
+    <string name="list_detail_item_label">Товар</string>
+    <string name="list_detail_item_placeholder">Добавить новый товар</string>
+    <string name="list_detail_quantity_label">Количество</string>
+    <string name="list_detail_unit_label">Единицы</string>
+    <!-- Количество и единица под названием товара, например «1 л» -->
+    <string name="list_detail_item_quantity">%1$s %2$s</string>
+
+    <!-- Единицы измерения -->
+    <string name="list_detail_unit_liter">л</string>
+    <string name="list_detail_unit_milliliter">мл</string>
+    <string name="list_detail_unit_package">уп</string>
+    <string name="list_detail_unit_pack">пач</string>
+    <string name="list_detail_unit_piece">шт</string>
+    <string name="list_detail_unit_kilogram">кг</string>
+    <string name="list_detail_unit_gram">г</string>
+
+    <!-- Меню списка -->
+    <string name="list_detail_menu_sort">Сортировка</string>
+    <string name="list_detail_sort_alphabetical">По алфавиту</string>
+    <string name="list_detail_sort_custom">Пользовательская</string>
+    <string name="list_detail_menu_delete_all">Удалить все</string>
+    <string name="list_detail_menu_clear_purchased">Очистить купленные</string>
+
+    <!-- Подтверждения -->
+    <string name="list_detail_delete_all_dialog_title">Удалить все товары?</string>
+    <string name="list_detail_clear_purchased_dialog_title">Удалить все купленные товары?</string>
+
+    <!-- contentDescription -->
+    <string name="list_detail_add_item">Добавить товар</string>
+    <string name="list_detail_save_item">Сохранить товар</string>
+    <string name="list_detail_quantity_decrease">Уменьшить количество</string>
+    <string name="list_detail_quantity_increase">Увеличить количество</string>
+    <string name="list_detail_mark_purchased">Отметить как купленный</string>
+    <string name="list_detail_empty_image_description">Девушка с корзиной покупок</string>
+</resources>

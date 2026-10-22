@@ -1,18 +1,9 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("convention.android.library")
 }
 
 android {
     namespace = "com.example.shoppinglist.core.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.valueOf(libs.versions.java.get())
-        targetCompatibility = JavaVersion.valueOf(libs.versions.java.get())
-    }
 }
 
 dependencies {

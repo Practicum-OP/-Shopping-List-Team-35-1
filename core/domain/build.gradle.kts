@@ -1,30 +1,22 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.jvm)
 }
 
-android {
-    namespace = "com.example.domain"
-    compileSdk {
-        version = release(37)
-    }
+val javaVersion = JavaVersion.valueOf(libs.versions.java.get())
 
-    defaultConfig {
-        minSdk = 26
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(javaVersion.toString()))
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.kotlinx.coroutines.core)
 }

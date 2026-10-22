@@ -31,3 +31,4 @@ dependencyResolutionManagement {
  */
 include("gradle-ext")
 include(":checks")
+include(":convention")

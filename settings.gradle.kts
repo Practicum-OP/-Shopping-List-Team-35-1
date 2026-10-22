@@ -27,3 +27,9 @@ rootProject.name = "ShoppingList"
 includeBuild("build-logic")
 
 include(":app")
+include(":core:domain")
+include(":core:data")
+include(":core:designsystem")
+include(":feature:intro")
+include(":feature:lists")
+include(":feature:listdetail")

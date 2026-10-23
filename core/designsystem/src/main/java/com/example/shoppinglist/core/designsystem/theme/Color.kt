@@ -1,4 +1,6 @@
-package com.example.shoppinglist.ui.theme
+@file:Suppress("MagicNumber")
+
+package com.example.shoppinglist.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

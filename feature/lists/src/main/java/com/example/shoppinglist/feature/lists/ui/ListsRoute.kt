@@ -3,10 +3,10 @@ package com.example.shoppinglist.feature.lists.ui
 import androidx.compose.runtime.Composable
 
 @Composable
-fun ListRoute(
+fun ListsRoute(
     onOpenListDetail: () -> Unit,
 ) {
-    ListScreen(
+    ListsScreen(
         onOpenListDetailClick = onOpenListDetail,
     )
 }

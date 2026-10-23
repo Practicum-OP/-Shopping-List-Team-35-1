@@ -1,47 +1,40 @@
 package com.example.shoppinglist.feature.intro.ui
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 
 @Composable
 fun IntroScreen(
-    onLoginClick: () -> Unit,
-    onRegistrationClick: () -> Unit,
-    onRecoveryClick: () -> Unit,
+    onOpenLogin: () -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        delay(4_000)
+        onOpenLogin()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
-            alignment = Alignment.CenterVertically,
-        ),
+            .clickable {
+                onOpenLogin()
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = "Добро пожаловать")
-
-        Button(onClick = onLoginClick) {
-            Text(text = "Войти")
-        }
-
-        Button(onClick = onRegistrationClick) {
-            Text(text = "Зарегистрироваться")
-        }
-
-        Button(onClick = onRecoveryClick) {
-            Text(text = "Восстановить пароль")
-        }
+        Text(
+            text = "СПИСОК ПОКУПОК",
+            fontSize = 30.sp,
+        )
+        Text(
+            text = "Intro",
+            fontSize = 25.sp,
+        )
     }
 }

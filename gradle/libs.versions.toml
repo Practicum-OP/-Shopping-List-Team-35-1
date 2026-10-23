@@ -22,9 +22,6 @@ room = "2.8.5"
 
 # Static analysis
 detekt = "1.23.8"
-appcompat = "1.8.0"
-material = "1.14.0"
-runtime = "1.12.1"
 
 [libraries]
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
@@ -65,10 +62,6 @@ staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", 
 staticAnalysis-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 staticAnalysis-detektLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
 staticAnalysis-detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
-androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

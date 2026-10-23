@@ -22,7 +22,6 @@ class AndroidComposeConventionPlugin : Plugin<Project> {
 
             withVersionCatalog { libs ->
                 dependencies {
-                    add(IMPLEMENTATION, libs.androidx.compose.runtime)
                     add(IMPLEMENTATION, platform(libs.androidx.compose.bom))
                     add(IMPLEMENTATION, libs.androidx.compose.ui)
                     add(IMPLEMENTATION, libs.androidx.compose.material3)

@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui.theme
+package com.example.shoppinglist.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

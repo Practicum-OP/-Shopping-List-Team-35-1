@@ -1,58 +1,140 @@
 package com.example.shoppinglist.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+val LightColorScheme = lightColorScheme(
+    // Основной акцент
+    primary = GoldenBrown,
+    onPrimary = White,
+    primaryContainer = PalePeach,
+    onPrimaryContainer = DarkChocolate,
+
+    // Вторичный акцент
+    secondary = GoldenBrown, // Временное соответствие
+    onSecondary = White, // Временное соответствие
+    secondaryContainer = SoftPeach,
+    onSecondaryContainer = DarkWalnut,
+
+    // Третичный акцент — отсутствует в выписанной палитре
+    tertiary = GoldenBrown,
+    onTertiary = White,
+    tertiaryContainer = SoftPeach,
+    onTertiaryContainer = DarkWalnut,
+
+    // Фон
+    background = WarmIvory,
+    onBackground = DeepBrown, // Использован onSurface
+
+    // Поверхности
+    surface = WarmIvory, // Использован background
+    onSurface = DeepBrown,
+    surfaceVariant = CreamBeige, // Временное соответствие
+    onSurfaceVariant = DarkTaupe,
+
+    // Контуры
+    outline = WarmTaupe,
+    outlineVariant = SandBeige, // Предположение для цвета с пометкой ???
+
+    // Инверсные роли — временные соответствия
+    inverseSurface = CoffeeBrown,
+    inverseOnSurface = WarmIvory,
+    inversePrimary = Apricot,
+
+    // Уровни поверхностей
+    surfaceDim = LightBeige, // Временное соответствие
+    surfaceBright = WarmIvory, // Временное соответствие
+    surfaceContainerLowest = White, // Временное соответствие
+    surfaceContainerLow = WarmIvory, // Временное соответствие
+    surfaceContainer = CreamBeige, // Временное соответствие
+    surfaceContainerHigh = CreamBeige,
+    surfaceContainerHighest = LightBeige,
+
+    surfaceTint = GoldenBrown,
+    scrim = Black,
+
+    // error, onError, errorContainer и onErrorContainer
+    // пока используются стандартные из lightColorScheme().
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+val DarkColorScheme = darkColorScheme(
+    // Основной акцент: dark-medium-contrast
+    primary = Apricot,
+    onPrimary = White,
+    primaryContainer = Caramel,
+    onPrimaryContainer = Black, // Временное соответствие
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    // Вторичный акцент: dark-medium-contrast
+    secondary = LightTan,
+    onSecondary = Black, // Временное соответствие
+    secondaryContainer = MutedBrown,
+    onSecondaryContainer = Black,
+
+    // Третичный акцент — отсутствует в выписанной палитре
+    tertiary = LightTan,
+    onTertiary = Black,
+    tertiaryContainer = MutedBrown,
+    onTertiaryContainer = Black,
+
+    // Фон
+    background = BlackBrown,
+    onBackground = RoseWhite, // Использован medium-contrast onSurface
+
+    // Поверхности: dark-medium-contrast
+    surface = BlackBrown,
+    onSurface = RoseWhite,
+    surfaceVariant = CocoaBrown, // Временное соответствие
+    onSurfaceVariant = PaleTaupe,
+
+    // Контуры
+    outline = MediumTaupe, // Временно совпадает с outlineVariant
+    outlineVariant = MediumTaupe,
+
+    // Инверсные роли
+    inverseSurface = LightBeige, // Временное соответствие
+    inverseOnSurface = CoffeeBrown,
+    inversePrimary = GoldenBrown, // Временное соответствие
+
+    // Уровни поверхностей
+    surfaceDim = BlackBrown, // Временное соответствие
+    surfaceBright = CocoaBrown, // Временное соответствие
+    surfaceContainerLowest = NearBlack,
+    surfaceContainerLow = BlackBrown, // Временное соответствие
+    surfaceContainer = CoffeeBrown, // Временное соответствие
+    surfaceContainerHigh = CoffeeBrown,
+    surfaceContainerHighest = CocoaBrown,
+
+    surfaceTint = Apricot,
+    scrim = Black,
+
+    // error, onError, errorContainer и onErrorContainer
+    // пока используются стандартные из darkColorScheme().
 )
 
+/**
+ * Фиксированная палитра приложения.
+ * Динамические цвета на основе обоев не используются.
+ */
 @Composable
 fun ShoppingListTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    typography: Typography = MaterialTheme.typography,
+    shapes: Shapes = MaterialTheme.shapes,
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = if (darkTheme) {
+            DarkColorScheme
+        } else {
+            LightColorScheme
+        },
+        typography = typography,
+        shapes = shapes,
+        content = content,
     )
 }

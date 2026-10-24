@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.core.designsystem.theme.AppDimens
 import com.example.shoppinglist.feature.lists.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,9 +38,9 @@ fun ListsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(24.dp),
+                .padding(horizontal = AppDimens.screenHorizontalPadding),
             verticalArrangement = Arrangement.spacedBy(
-                space = 24.dp,
+                space = AppDimens.spacingLarge,
                 alignment = Alignment.CenterVertically,
             ),
             horizontalAlignment = Alignment.CenterHorizontally,

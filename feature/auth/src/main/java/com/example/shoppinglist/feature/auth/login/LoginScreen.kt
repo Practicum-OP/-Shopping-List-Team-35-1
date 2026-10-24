@@ -14,7 +14,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.feature.auth.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +29,7 @@ fun LoginScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Авторизация")
+                    Text(text = stringResource(R.string.auth_login_title))
                 },
             )
         },
@@ -47,21 +49,21 @@ fun LoginScreen(
                 onClick = onLogin,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = "Войти")
+                Text(text = stringResource(R.string.auth_login_button))
             }
 
             OutlinedButton(
                 onClick = onRegister,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = "Зарегистрироваться")
+                Text(text = stringResource(R.string.auth_registration_button))
             }
 
             OutlinedButton(
                 onClick = onRestorePassword,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = "Восстановить пароль")
+                Text(text = stringResource(R.string.auth_recovery_button))
             }
         }
     }

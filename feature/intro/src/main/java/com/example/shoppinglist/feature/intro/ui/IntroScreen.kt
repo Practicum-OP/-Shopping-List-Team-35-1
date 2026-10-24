@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
+import com.example.shoppinglist.feature.intro.R
 import kotlinx.coroutines.delay
 
 private const val INTRO_DELAY_MILLIS = 4_000L
@@ -31,11 +33,11 @@ fun IntroScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "СПИСОК ПОКУПОК",
+            text = stringResource(R.string.intro_title),
             fontSize = 30.sp,
         )
         Text(
-            text = "Intro",
+            text = stringResource(R.string.intro_description),
             fontSize = 25.sp,
         )
     }

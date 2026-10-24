@@ -1,6 +1,9 @@
 <resources>
     <string name="lists_title">Мои списки</string>
 
+    <!-- Временная кнопка перехода к содержимому списка -->
+    <string name="lists_open_list">Открыть список</string>
+
     <!-- Пустое состояние -->
     <string name="lists_empty_title">У вас пока нет списков</string>
     <string name="lists_empty_description">Нажмите на кнопку + ниже, чтобы создать свой первый список</string>

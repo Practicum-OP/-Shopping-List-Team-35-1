@@ -1,4 +1,8 @@
 <resources>
+    <!-- Заглушки до появления реального названия списка -->
+    <string name="list_detail_title">Содержимое списка</string>
+    <string name="list_detail_back_to_lists">Вернуться к спискам</string>
+
     <!-- Пустое состояние -->
     <string name="list_detail_empty_title">В списке покупок пока пусто</string>
     <string name="list_detail_empty_description">Нажмите на кнопку + ниже, чтобы добавить товары</string>

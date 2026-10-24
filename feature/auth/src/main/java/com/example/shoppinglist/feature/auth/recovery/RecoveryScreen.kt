@@ -17,7 +17,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.core.designsystem.R as DesignSystemR
+import com.example.shoppinglist.feature.auth.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,13 +32,13 @@ fun RecoveryScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Восстановление пароля")
+                    Text(text = stringResource(R.string.auth_recovery_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад",
+                            contentDescription = stringResource(DesignSystemR.string.common_back),
                         )
                     }
                 },
@@ -57,7 +60,7 @@ fun RecoveryScreen(
                 onClick = onRestorePassword,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = "Восстановить пароль")
+                Text(text = stringResource(R.string.auth_recovery_send_button))
             }
         }
     }

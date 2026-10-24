@@ -12,7 +12,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.feature.lists.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun ListsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Мои списки",
+                        text = stringResource(R.string.lists_title),
                     )
                 },
             )
@@ -47,7 +49,7 @@ fun ListsScreen(
                 onClick = onOpenListDetailClick,
             ) {
                 Text(
-                    text = "Открыть список",
+                    text = stringResource(R.string.lists_open_list),
                 )
             }
         }

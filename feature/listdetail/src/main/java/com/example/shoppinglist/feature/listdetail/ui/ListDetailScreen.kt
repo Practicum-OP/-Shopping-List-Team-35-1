@@ -12,7 +12,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.shoppinglist.feature.listdetail.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun ListDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Содержимое списка",
+                        text = stringResource(R.string.list_detail_title),
                     )
                 },
             )
@@ -47,7 +49,7 @@ fun ListDetailScreen(
                 onClick = onBackClick,
             ) {
                 Text(
-                    text = "Вернуться к спискам",
+                    text = stringResource(R.string.list_detail_back_to_lists),
                 )
             }
         }

@@ -1,0 +1,37 @@
+<resources>
+    <string name="lists_title">Мои списки</string>
+
+    <!-- Временная кнопка перехода к содержимому списка -->
+    <string name="lists_open_list">Открыть список</string>
+
+    <!-- Пустое состояние -->
+    <string name="lists_empty_title">У вас пока нет списков</string>
+    <string name="lists_empty_description">Нажмите на кнопку + ниже, чтобы создать свой первый список</string>
+
+    <!-- Поиск -->
+    <string name="lists_search_hint">Поиск списков</string>
+    <string name="lists_search_not_found_title">Мы не смогли найти то, что вы искали</string>
+    <string name="lists_search_not_found_description">Попробуйте изменить запрос или проверить написание</string>
+
+    <!-- Создание и переименование списка -->
+    <string name="lists_create_dialog_title">Добавление списка</string>
+    <string name="lists_rename_dialog_title">Переименование списка</string>
+    <string name="lists_name_label">Название списка</string>
+    <string name="lists_name_placeholder">Новый список</string>
+
+    <!-- Копирование списка -->
+    <string name="lists_copy_name">%1$s (Копия)</string>
+
+    <!-- Подтверждения удаления -->
+    <string name="lists_delete_dialog_title">Удалить список «%1$s»?</string>
+    <string name="lists_delete_all_dialog_title">Удалить все списки?</string>
+
+    <!-- contentDescription -->
+    <string name="lists_search">Поиск</string>
+    <string name="lists_delete_all">Удалить все списки</string>
+    <string name="lists_toggle_theme">Сменить тему</string>
+    <string name="lists_add">Добавить список</string>
+    <string name="lists_change_icon">Сменить иконку списка</string>
+    <string name="lists_empty_image_description">Девушка со списком покупок</string>
+    <string name="lists_not_found_image_description">Девушка разводит руками</string>
+</resources>

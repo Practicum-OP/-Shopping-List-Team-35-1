@@ -123,18 +123,12 @@ val DarkColorScheme = darkColorScheme(
 @Composable
 fun ShoppingListTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    typography: Typography = MaterialTheme.typography,
-    shapes: Shapes = MaterialTheme.shapes,
+    typography: Typography = AppTypography,
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = if (darkTheme) {
-            DarkColorScheme
-        } else {
-            LightColorScheme
-        },
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = typography,
-        shapes = shapes,
         content = content,
     )
 }

@@ -18,9 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.shoppinglist.core.designsystem.R as DesignSystemR
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
 import com.example.shoppinglist.feature.auth.R
+import com.example.shoppinglist.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

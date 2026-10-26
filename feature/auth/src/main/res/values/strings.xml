@@ -1,0 +1,32 @@
+<resources>
+    <!-- Заголовки экранов -->
+    <string name="auth_login_title">Авторизация</string>
+    <string name="auth_registration_title">Регистрация</string>
+    <string name="auth_recovery_title">Восстановление пароля</string>
+
+    <!-- Поля ввода -->
+    <string name="auth_email_label">Email</string>
+    <string name="auth_password_label">Пароль</string>
+    <string name="auth_password_repeat_label">Повторите пароль</string>
+
+    <!-- Кнопки -->
+    <string name="auth_login_button">Войти</string>
+    <string name="auth_registration_button">Зарегистрироваться</string>
+    <string name="auth_recovery_button">Восстановить пароль</string>
+    <string name="auth_recovery_send_button">Отправить письмо для восстановления пароля</string>
+
+    <!-- Ошибки валидации под полями -->
+    <string name="auth_error_email_invalid">Некорректный email</string>
+    <string name="auth_error_password_too_short">Пароль должен быть длиннее 6 символов</string>
+    <string name="auth_error_passwords_mismatch">Пароли не совпадают</string>
+
+    <!-- Ответы API -->
+    <string name="auth_error_user_exists">Пользователь с таким email уже существует</string>
+    <string name="auth_error_wrong_credentials">Неверный email или пароль</string>
+    <string name="auth_error_unknown">Не удалось выполнить запрос. Попробуйте ещё раз</string>
+    <string name="auth_recovery_success">Письмо для восстановления пароля отправлено</string>
+
+    <!-- contentDescription -->
+    <string name="auth_show_password">Показать пароль</string>
+    <string name="auth_hide_password">Скрыть пароль</string>
+</resources>

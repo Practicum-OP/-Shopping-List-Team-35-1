@@ -10,8 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.shoppinglist.navigation.AppNavHost
-import com.example.shoppinglist.ui.theme.ShoppingListTheme
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 
 class MainActivity : ComponentActivity() {

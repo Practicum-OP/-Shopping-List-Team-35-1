@@ -13,7 +13,7 @@ val AppFontFamily = FontFamily(
     Font(R.font.roboto_medium, FontWeight.Medium),
 )
 
-val Typography = Typography(
+val AppTypography = Typography(
     headlineSmall = TextStyle(
         fontFamily = AppFontFamily,
         fontWeight = FontWeight.Normal,

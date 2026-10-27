@@ -7,6 +7,6 @@ object ScreenRoute {
     const val REGISTRATION = "registration"
     const val RECOVERY = "recovery"
 
-    const val LISTS = "list"
+    const val LISTS = "lists"
     const val LIST_DETAIL = "list_detail"
 }

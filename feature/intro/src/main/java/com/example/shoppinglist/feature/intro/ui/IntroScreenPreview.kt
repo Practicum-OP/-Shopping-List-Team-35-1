@@ -9,7 +9,7 @@ import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 
 @DevicePreviews
 @Composable
-private fun MyComponentPreview() {
+private fun IntroScreenPreview() {
     ShoppingListTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),

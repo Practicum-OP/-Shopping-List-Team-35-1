@@ -49,12 +49,10 @@ fun AppNavHost(
     }
 
     fun returnToLogin() {
-        navController.navigate(ScreenRoute.LOGIN) {
-            popUpTo(ScreenRoute.LOGIN) {
-                inclusive = true
-            }
-            launchSingleTop = true
-        }
+        navController.popBackStack(
+            route = ScreenRoute.LOGIN,
+            inclusive = false,
+        )
     }
 
     NavHost(

@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.example.shoppinglist.core.data.room.entity.ShoppingListEntity
 import kotlinx.coroutines.flow.Flow
 
+@Suppress("TooManyFunctions")
 @Dao
 interface ShoppingListDao {
 

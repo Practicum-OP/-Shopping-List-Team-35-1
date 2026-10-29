@@ -7,21 +7,17 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "shopping_lists",
     indices = [
-        Index(value = ["sortOrder"]),
-        Index(value = ["updatedAt"])
-    ]
+        Index(value = ["sortOrder", "createdAt"]),
+        Index(value = ["updatedAt"]),
+    ],
 )
 data class ShoppingListEntity(
     @PrimaryKey
     val id: String,
-
     val name: String,
-
     val iconKey: String,
-
+    val itemsSortMode: String,
     val sortOrder: Int,
-
     val createdAt: Long,
-
-    val updatedAt: Long
+    val updatedAt: Long,
 )

@@ -1,6 +1,7 @@
 plugins {
     id("convention.android.library")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -12,6 +13,7 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
@@ -25,4 +27,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.okhttp.mockwebserver)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }

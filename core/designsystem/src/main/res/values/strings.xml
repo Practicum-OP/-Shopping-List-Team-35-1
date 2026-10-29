@@ -14,4 +14,6 @@
     <string name="common_edit">Редактировать</string>
     <string name="common_copy">Копировать</string>
     <string name="common_more">Ещё</string>
+    <string name="common_show_password">Показать пароль</string>
+    <string name="common_hide_password">Скрыть пароль</string>
 </resources>

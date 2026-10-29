@@ -25,8 +25,4 @@
     <string name="auth_error_wrong_credentials">Неверный email или пароль</string>
     <string name="auth_error_unknown">Не удалось выполнить запрос. Попробуйте ещё раз</string>
     <string name="auth_recovery_success">Письмо для восстановления пароля отправлено</string>
-
-    <!-- contentDescription -->
-    <string name="auth_show_password">Показать пароль</string>
-    <string name="auth_hide_password">Скрыть пароль</string>
 </resources>

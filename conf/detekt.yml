@@ -734,7 +734,7 @@ style:
     UnusedPrivateMember:
         active: true
         allowedNames: '(_|ignored|expected|serialVersionUID|commonMain|commonTest|androidMain|androidTest|iosMain|iosTest)'
-        ignoreAnnotated: [ 'Preview', 'LightDarkPreviews' ]
+        ignoreAnnotated: [ 'Preview', 'LightDarkPreviews', 'DevicePreviews' ]
     UseArrayLiteralsInAnnotations:
         active: true
     UseCheckNotNull:

@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 // Белые и почти белые оттенки
 val White = Color(0xFFFFFFFF)
 val RoseWhite = Color(0xFFFFFAF8) // диалог текст on surfase  (dark)
-val WarmIvory = Color(0xFFFFF8F4)
+val WarmIvory = Color(0xFFFFF8F4) // фон (light)
 
 // Светлые бежевые и персиковые оттенки
 val CreamBeige = Color(0xFFF4E6DA) // диалог surfase container high (light)
@@ -24,7 +24,7 @@ val GoldenBrown = Color(0xFF845416) // кнопка- primary (light)
 val Caramel = Color(0xFFBE8543)
 val Apricot = Color(0xFFFFBE77) // кнопка- primary (dark)
 val Tan = Color(0xFFE0C1A3)
-val LightTan = Color(0xFFE5C5A7)
+val LightTan = Color(0xFFE5C5A7) // текст TextButton
 val MutedBrown = Color(0xFFA78C70) // кнопка cancel - secondary cont (dark)
 
 // Коричневые и почти чёрные оттенки
@@ -35,7 +35,7 @@ val DeepBrown = Color(0xFF211A14) // диалог текст on surfase (light)
 val DarkChocolate = Color(0xFF2B1700)
 val DarkWalnut = Color(0xFF281805) // кнопка cancel- on secondary cont (light)
 val Brown = Color(0xFF241200)
-val BlackBrown = Color(0xFF19120C)
+val BlackBrown = Color(0xFF19120C) // фон (dark)
 val NearBlack = Color(0xFF130D07)
 val Black = Color(0xFF000000)
 

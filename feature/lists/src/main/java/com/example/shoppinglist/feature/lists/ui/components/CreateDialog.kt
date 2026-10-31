@@ -25,7 +25,6 @@ import com.example.shoppinglist.feature.lists.R
 @Composable
 fun CreateDialog(
     onCreate: (String) -> Unit,
-    onDismiss: () -> Unit,
 ) {
     var textTitleList by rememberSaveable {
         mutableStateOf("")
@@ -36,9 +35,7 @@ fun CreateDialog(
     AlertDialog(
         icon = {
             Icon(
-                painter = painterResource(
-                    R.drawable.ic_add_list,
-                ),
+                painter = painterResource(R.drawable.ic_add_list),
                 contentDescription = stringResource(
                     R.string.lists_create_dialog_title,
                 ),
@@ -46,9 +43,7 @@ fun CreateDialog(
         },
         title = {
             Text(
-                text = stringResource(
-                    R.string.lists_create_dialog_title,
-                ),
+                text = stringResource(R.string.lists_create_dialog_title),
                 style = MaterialTheme.typography.headlineSmall,
             )
         },
@@ -59,34 +54,32 @@ fun CreateDialog(
                     textTitleList = newValue
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = {
-                    Text(
-                        text = stringResource(
-                            R.string.lists_name_label,
-                        ),
-                    )
-                },
                 placeholder = {
                     Text(
-                        text = stringResource(
-                            R.string.lists_name_placeholder,
-                        ),
+                        text = stringResource(R.string.lists_name_placeholder),
                     )
+                },
+                label = if (textTitleList.isNotEmpty()) {
+                    {
+                        Text(
+                            text = stringResource(
+                                R.string.lists_name_label,
+                            ),
+                        )
+                    }
+                } else {
+                    null
                 },
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor =
-                    MaterialTheme.colorScheme.outline,
-                    focusedBorderColor =
-                    MaterialTheme.colorScheme.outline,
-                    unfocusedLabelColor =
-                    MaterialTheme.colorScheme.outline,
-                    focusedLabelColor =
-                    MaterialTheme.colorScheme.outline,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedBorderColor = MaterialTheme.colorScheme.outline,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+                    focusedLabelColor = MaterialTheme.colorScheme.outline,
                 ),
             )
         },
-        onDismissRequest = onDismiss,
+        onDismissRequest = { },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -95,9 +88,7 @@ fun CreateDialog(
                 enabled = isCreateEnabled,
             ) {
                 Text(
-                    text = stringResource(
-                        R.string.lists_create,
-                    ),
+                    text = stringResource(R.string.lists_create),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -105,12 +96,10 @@ fun CreateDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = onDismiss,
+                onClick = { },
             ) {
                 Text(
-                    text = stringResource(
-                        R.string.lists_cancel,
-                    ),
+                    text = stringResource(R.string.lists_cancel),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -121,15 +110,12 @@ fun CreateDialog(
 
 @DevicePreviews
 @Composable
-fun CreateDialogPreview() {
+fun EditDialogPreviewAdd() {
     ShoppingListTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            CreateDialog(
-                onCreate = { },
-                onDismiss = { },
-            )
+            CreateDialog {}
         }
     }
 }

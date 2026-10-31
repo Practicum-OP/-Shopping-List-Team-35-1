@@ -1,8 +1,6 @@
 <resources>
     <!-- Кнопки диалогов -->
     <string name="common_cancel">Отмена</string>
-    <string name="common_create">Создать</string>
-    <string name="common_rename">Переименовать</string>
     <string name="common_delete">Удалить</string>
 
     <!-- contentDescription общих иконок -->
@@ -16,4 +14,8 @@
     <string name="common_more">Ещё</string>
     <string name="common_show_password">Показать пароль</string>
     <string name="common_hide_password">Скрыть пароль</string>
+
+    <!-- Диалоги: text, title -->
+
+    <string name="list_name_hint">Название списка</string>
 </resources>

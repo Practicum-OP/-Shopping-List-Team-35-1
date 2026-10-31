@@ -9,16 +9,16 @@ import androidx.compose.runtime.Composable
 
 val LightColorScheme = lightColorScheme(
     // Основной акцент
-    primary = GoldenBrown,
-    onPrimary = White,
+    primary = GoldenBrown, // +
+    onPrimary = White, // +
     primaryContainer = PalePeach,
     onPrimaryContainer = DarkChocolate,
 
     // Вторичный акцент
-    secondary = GoldenBrown, // Временное соответствие
+    secondary = DarkTaupe, // Иконка диалогов
     onSecondary = White, // Временное соответствие
-    secondaryContainer = SoftPeach,
-    onSecondaryContainer = DarkWalnut,
+    secondaryContainer = SoftPeach, // +
+    onSecondaryContainer = DarkWalnut, // +
 
     // Третичный акцент — отсутствует в выписанной палитре
     tertiary = GoldenBrown,
@@ -32,7 +32,7 @@ val LightColorScheme = lightColorScheme(
 
     // Поверхности
     surface = WarmIvory, // Использован background
-    onSurface = DeepBrown,
+    onSurface = DeepBrown, // +
     surfaceVariant = CreamBeige, // Временное соответствие
     onSurfaceVariant = DarkTaupe,
 
@@ -51,7 +51,7 @@ val LightColorScheme = lightColorScheme(
     surfaceContainerLowest = White, // Временное соответствие
     surfaceContainerLow = WarmIvory, // Временное соответствие
     surfaceContainer = CreamBeige, // Временное соответствие
-    surfaceContainerHigh = CreamBeige,
+    surfaceContainerHigh = CreamBeige, // +
     surfaceContainerHighest = LightBeige,
 
     surfaceTint = GoldenBrown,
@@ -63,16 +63,16 @@ val LightColorScheme = lightColorScheme(
 
 val DarkColorScheme = darkColorScheme(
     // Основной акцент: dark-medium-contrast
-    primary = Apricot,
-    onPrimary = White,
+    primary = Apricot, // +
+    onPrimary = Brown, // +,
     primaryContainer = Caramel,
     onPrimaryContainer = Black, // Временное соответствие
 
     // Вторичный акцент: dark-medium-contrast
-    secondary = LightTan,
+    secondary = PaleTaupe,
     onSecondary = Black, // Временное соответствие
-    secondaryContainer = MutedBrown,
-    onSecondaryContainer = Black,
+    secondaryContainer = MutedBrown, // +
+    onSecondaryContainer = Black, // +
 
     // Третичный акцент — отсутствует в выписанной палитре
     tertiary = LightTan,
@@ -86,7 +86,7 @@ val DarkColorScheme = darkColorScheme(
 
     // Поверхности: dark-medium-contrast
     surface = BlackBrown,
-    onSurface = RoseWhite,
+    onSurface = RoseWhite, // +
     surfaceVariant = CocoaBrown, // Временное соответствие
     onSurfaceVariant = PaleTaupe,
 
@@ -105,7 +105,7 @@ val DarkColorScheme = darkColorScheme(
     surfaceContainerLowest = NearBlack,
     surfaceContainerLow = BlackBrown, // Временное соответствие
     surfaceContainer = CoffeeBrown, // Временное соответствие
-    surfaceContainerHigh = CoffeeBrown,
+    surfaceContainerHigh = CoffeeBrown, // +
     surfaceContainerHighest = CocoaBrown,
 
     surfaceTint = Apricot,

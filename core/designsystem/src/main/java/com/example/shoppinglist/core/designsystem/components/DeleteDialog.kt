@@ -1,5 +1,6 @@
 package com.example.shoppinglist.core.designsystem.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -19,25 +20,28 @@ import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 @Composable
 fun DeleteDialog(
     onDelete: (Int?) -> Unit,
-    onCancel: () -> Unit,
-    dialogTitle: String,
-    contentDescription: String?,
+    @StringRes dialogTitle: Int,
+    @StringRes contentDescription: Int?,
     idItem: Int?
 
 ) {
     AlertDialog(
         icon = {
-            Icon(painter = painterResource(R.drawable.ic_warning), contentDescription = contentDescription)
+            Icon(
+                painter = painterResource(R.drawable.ic_warning),
+                contentDescription = contentDescription?.let { resourceId ->
+                    stringResource(resourceId)
+                },
+            )
+
         },
         title = {
             Text(
-                text = dialogTitle,
+                text = stringResource(dialogTitle),
                 style = MaterialTheme.typography.headlineSmall
             )
         },
-        onDismissRequest = {
-            onCancel()
-        },
+        onDismissRequest = { },
         confirmButton = {
             Button(onClick = { onDelete(idItem) }) {
                 Text(
@@ -47,7 +51,7 @@ fun DeleteDialog(
             }
         },
         dismissButton = {
-            FilledTonalButton(onClick = { onCancel() }) {
+            FilledTonalButton(onClick = { }) {
                 Text(
                     stringResource(R.string.common_cancel),
                     style = MaterialTheme.typography.labelLarge,
@@ -66,10 +70,9 @@ fun DeleteDialogPreview() {
         ) {
             DeleteDialog(
                 {},
-                {},
-                stringResource(R.string.common_delete),
+                R.string.common_delete,
+                R.string.common_delete,
                 null,
-                null
             )
         }
     }

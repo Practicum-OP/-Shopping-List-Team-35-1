@@ -9,16 +9,16 @@ import androidx.compose.runtime.Composable
 
 val LightColorScheme = lightColorScheme(
     // Основной акцент
-    primary = GoldenBrown, // + Кнопка, TextButton, рамка и label TextField
-    onPrimary = White, // + Текст кнопки
+    primary = GoldenBrown, // +
+    onPrimary = White, // +
     primaryContainer = PalePeach,
     onPrimaryContainer = DarkChocolate,
 
     // Вторичный акцент
-    secondary = DarkTaupe, // + Иконка диалогов
+    secondary = DarkTaupe, // Иконка диалогов
     onSecondary = White, // Временное соответствие
-    secondaryContainer = SoftPeach, // + дополнительная кнопка Диалога (Отмена)
-    onSecondaryContainer = DarkWalnut, // + текст дополнительной кнопки Диалога (Отмена)
+    secondaryContainer = SoftPeach, // +
+    onSecondaryContainer = DarkWalnut, // +
 
     // Третичный акцент — отсутствует в выписанной палитре
     tertiary = GoldenBrown,
@@ -27,18 +27,18 @@ val LightColorScheme = lightColorScheme(
     onTertiaryContainer = DarkWalnut,
 
     // Фон
-    background = WarmIvory, // + Фон
+    background = WarmIvory,
     onBackground = DeepBrown, // Использован onSurface
 
     // Поверхности
-    surface = WarmIvory, // + TopBar
-    onSurface = DeepBrown, // + Цвет текста Далогового окна, Текстового поля
+    surface = WarmIvory, // Использован background
+    onSurface = DeepBrown, // +
     surfaceVariant = CreamBeige, // Временное соответствие
-    onSurfaceVariant = GoldenBrown, // DarkTaupe,
+    onSurfaceVariant = DarkTaupe,
 
     // Контуры
-    outline = GoldenBrown, // + рамка текстового поля WarmTaupe,
-    outlineVariant = WarmTaupe, // + линия под строкой поиска
+    outline = WarmTaupe,
+    outlineVariant = SandBeige, // Предположение для цвета с пометкой ???
 
     // Инверсные роли — временные соответствия
     inverseSurface = CoffeeBrown,
@@ -50,8 +50,8 @@ val LightColorScheme = lightColorScheme(
     surfaceBright = WarmIvory, // Временное соответствие
     surfaceContainerLowest = White, // Временное соответствие
     surfaceContainerLow = WarmIvory, // Временное соответствие
-    surfaceContainer = WarmIvory, // Временное соответствие
-    surfaceContainerHigh = CreamBeige, // + Цвет окна Диалога
+    surfaceContainer = CreamBeige, // Временное соответствие
+    surfaceContainerHigh = CreamBeige, // +
     surfaceContainerHighest = LightBeige,
 
     surfaceTint = GoldenBrown,
@@ -69,7 +69,7 @@ val DarkColorScheme = darkColorScheme(
     onPrimaryContainer = Black, // Временное соответствие
 
     // Вторичный акцент: dark-medium-contrast
-    secondary = PaleTaupe, // +
+    secondary = PaleTaupe,
     onSecondary = Black, // Временное соответствие
     secondaryContainer = MutedBrown, // +
     onSecondaryContainer = Black, // +
@@ -81,18 +81,18 @@ val DarkColorScheme = darkColorScheme(
     onTertiaryContainer = Black,
 
     // Фон
-    background = BlackBrown, // +
+    background = BlackBrown,
     onBackground = RoseWhite, // Использован medium-contrast onSurface
 
     // Поверхности: dark-medium-contrast
-    surface = BlackBrown, // +
+    surface = BlackBrown,
     onSurface = RoseWhite, // +
     surfaceVariant = CocoaBrown, // Временное соответствие
-    onSurfaceVariant = LightTan, // PaleTaupe,
+    onSurfaceVariant = PaleTaupe,
 
     // Контуры
-    outline = LightTan, // +
-    outlineVariant = Tan, // + линия под строкой поиска
+    outline = MediumTaupe, // Временно совпадает с outlineVariant
+    outlineVariant = MediumTaupe,
 
     // Инверсные роли
     inverseSurface = LightBeige, // Временное соответствие

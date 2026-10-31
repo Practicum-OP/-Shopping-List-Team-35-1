@@ -1,6 +1,5 @@
 package com.example.shoppinglist.core.designsystem.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -20,29 +19,25 @@ import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 @Composable
 fun DeleteDialog(
     onDelete: (Int?) -> Unit,
-    onDismiss: () -> Unit,
-    @StringRes dialogTitle: Int,
-    @StringRes contentDescription: Int?,
+    onCancel: () -> Unit,
+    dialogTitle: String,
+    contentDescription: String?,
     idItem: Int?
 
 ) {
     AlertDialog(
         icon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_warning),
-                contentDescription = contentDescription?.let { resourceId ->
-                    stringResource(resourceId)
-                },
-            )
-
+            Icon(painter = painterResource(R.drawable.ic_warning), contentDescription = contentDescription)
         },
         title = {
             Text(
-                text = stringResource(dialogTitle),
+                text = dialogTitle,
                 style = MaterialTheme.typography.headlineSmall
             )
         },
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            onCancel()
+        },
         confirmButton = {
             Button(onClick = { onDelete(idItem) }) {
                 Text(
@@ -52,7 +47,7 @@ fun DeleteDialog(
             }
         },
         dismissButton = {
-            FilledTonalButton(onClick = onDismiss) {
+            FilledTonalButton(onClick = { onCancel() }) {
                 Text(
                     stringResource(R.string.common_cancel),
                     style = MaterialTheme.typography.labelLarge,
@@ -72,9 +67,9 @@ fun DeleteDialogPreview() {
             DeleteDialog(
                 {},
                 {},
-                R.string.common_delete,
-                R.string.common_delete,
+                stringResource(R.string.common_delete),
                 null,
+                null
             )
         }
     }

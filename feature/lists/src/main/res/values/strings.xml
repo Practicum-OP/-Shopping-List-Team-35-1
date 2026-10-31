@@ -18,6 +18,9 @@
     <string name="lists_rename_dialog_title">Переименование списка</string>
     <string name="lists_name_label">Название списка</string>
     <string name="lists_name_placeholder">Новый список</string>
+    <string name="lists_rename">Переименовать</string>
+    <string name="lists_cancel">Отмена</string>
+    <string name="lists_create">Создать</string>
 
     <!-- Копирование списка -->
     <string name="lists_copy_name">%1$s (Копия)</string>

@@ -3,7 +3,7 @@ package com.example.shoppinglist.feature.listdetail.ui
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 
 sealed interface ListDetailEvent {
-    //верхнее меню и пункты меню
+    // верхнее меню и пункты меню
     data object BackClicked : ListDetailEvent
 
     data class SortModeSelected(
@@ -14,7 +14,7 @@ sealed interface ListDetailEvent {
 
     data object ClearPurchasedConfirmed : ListDetailEvent
 
-    //действия над элементами списка
+    // действия над элементами списка
     data class PurchaseToggled(
         val itemId: String
     ) : ListDetailEvent
@@ -32,7 +32,7 @@ sealed interface ListDetailEvent {
         val toIndex: Int
     ) : ListDetailEvent
 
-    //создание и редактирование товара
+    // создание и редактирование товара
     data object AddItemClicked : ListDetailEvent
 
     data object FormSubmitted : ListDetailEvent

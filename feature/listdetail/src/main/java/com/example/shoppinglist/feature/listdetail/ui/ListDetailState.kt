@@ -10,7 +10,7 @@ data class ListDetailState(
     val itemForm: ItemFormState? = null,
 )
 
-//временная модель для отображения
+// временная модель для отображения
 data class ShoppingItemUi(
     val id: String,
     val name: String,
@@ -22,7 +22,7 @@ data class ShoppingItemUi(
 sealed interface ListContent {
     data object Loading : ListContent
     data object Empty : ListContent
-    data class Items(val items: List<ShoppingItemUi>) : ListContent //позже заменить на настоящий список
+    data class Items(val items: List<ShoppingItemUi>) : ListContent // позже заменить на настоящий список
 }
 
 data class ItemFormState(

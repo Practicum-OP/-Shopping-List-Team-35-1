@@ -95,6 +95,8 @@ fun RenameDialog(
     )
 }
 
+private const val PREVIEW_LIST_ID = 5
+
 @DevicePreviews
 @Composable
 fun RenameDialogPreview() {
@@ -102,7 +104,7 @@ fun RenameDialogPreview() {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            RenameDialog({ string, i -> }, "sdsf", 5)
+            RenameDialog({ string, i -> }, "новый год", PREVIEW_LIST_ID)
         }
     }
 }

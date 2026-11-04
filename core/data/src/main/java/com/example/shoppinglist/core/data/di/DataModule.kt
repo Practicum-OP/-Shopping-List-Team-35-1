@@ -20,4 +20,12 @@ val dataModule = module {
     single {
         get<ShoppingListDatabase>().shoppingListDao()
     }
+
+    single {
+        get<ShoppingListDatabase>().shoppingItemDao()
+    }
+
+    single {
+        get<ShoppingListDatabase>().itemHistoryDao()
+    }
 }

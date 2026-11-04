@@ -22,28 +22,25 @@ import androidx.compose.ui.unit.dp
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
 import com.example.shoppinglist.feature.lists.R
 
-private val SearchFieldHeight = 64.dp
+private val SearchFieldHeight = 73.dp
 
 @Composable
 fun SearchField(
     query: String,
     onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
         modifier = modifier
             .fillMaxWidth()
             .height(SearchFieldHeight),
-        color = MaterialTheme.colorScheme.surface,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = AppDimens.screenHorizontalPadding,
-                ),
+                .padding(horizontal = AppDimens.screenHorizontalPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
@@ -51,12 +48,10 @@ fun SearchField(
                 modifier = Modifier.size(AppDimens.iconButtonSize),
             ) {
                 Icon(
-                    painter = painterResource(
-                        R.drawable.ic_back_arrow,
-                    ),
-                    contentDescription = "Назад",
-                    modifier = Modifier.size(AppDimens.iconSize),
+                    painter = painterResource(R.drawable.ic_back_arrow),
+                    contentDescription = null, // стрелка «назад» в топбаре — опиши, если это единственный элемент навигации
                     tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(AppDimens.iconSize),
                 )
             }
 
@@ -69,39 +64,18 @@ fun SearchField(
                 ),
                 singleLine = true,
                 decorationBox = { innerTextField ->
-                    Box(
-                        contentAlignment = Alignment.CenterStart,
-                    ) {
+                    Box {
                         if (query.isEmpty()) {
                             Text(
-                                text = stringResource(
-                                    R.string.lists_search_hint,
-                                ),
+                                text = stringResource(R.string.lists_search_hint),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.secondary,
                             )
                         }
-
                         innerTextField()
                     }
                 },
             )
-
-            if (query.isNotEmpty()) {
-                IconButton(
-                    onClick = onClearClick,
-                    modifier = Modifier.size(AppDimens.iconButtonSize),
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            R.drawable.ic_close,
-                        ),
-                        contentDescription = "Очистить поиск",
-                        modifier = Modifier.size(AppDimens.iconSize),
-                        tint = MaterialTheme.colorScheme.secondary,
-                    )
-                }
-            }
         }
     }
 
@@ -109,8 +83,6 @@ fun SearchField(
         modifier = Modifier
             .fillMaxWidth()
             .height(AppDimens.dividerThickness)
-            .background(
-                MaterialTheme.colorScheme.outlineVariant,
-            ),
+            .background(MaterialTheme.colorScheme.outlineVariant),
     )
 }

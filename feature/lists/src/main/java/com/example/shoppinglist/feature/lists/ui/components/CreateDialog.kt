@@ -25,6 +25,7 @@ import com.example.shoppinglist.feature.lists.R
 @Composable
 fun CreateDialog(
     onCreate: (String) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     var textTitleList by rememberSaveable {
         mutableStateOf("")
@@ -79,7 +80,7 @@ fun CreateDialog(
                 ),
             )
         },
-        onDismissRequest = { },
+        onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
@@ -96,7 +97,7 @@ fun CreateDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = { },
+                onClick = onDismiss,
             ) {
                 Text(
                     text = stringResource(R.string.lists_cancel),
@@ -115,7 +116,7 @@ fun EditDialogPreviewAdd() {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            CreateDialog {}
+            CreateDialog({ "sdfsdf" }, {})
         }
     }
 }

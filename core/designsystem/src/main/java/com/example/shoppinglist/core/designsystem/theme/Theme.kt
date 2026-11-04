@@ -38,7 +38,7 @@ val LightColorScheme = lightColorScheme(
 
     // Контуры
     outline = GoldenBrown, // + рамка текстового поля WarmTaupe,
-    outlineVariant = SandBeige, // Предположение для цвета с пометкой ???
+    outlineVariant = WarmTaupe, // + линия под строкой поиска
 
     // Инверсные роли — временные соответствия
     inverseSurface = CoffeeBrown,
@@ -92,7 +92,7 @@ val DarkColorScheme = darkColorScheme(
 
     // Контуры
     outline = LightTan, // +
-    outlineVariant = MediumTaupe,
+    outlineVariant = Tan, // + линия под строкой поиска
 
     // Инверсные роли
     inverseSurface = LightBeige, // Временное соответствие

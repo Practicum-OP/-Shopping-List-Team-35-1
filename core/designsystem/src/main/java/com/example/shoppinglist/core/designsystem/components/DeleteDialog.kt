@@ -20,6 +20,7 @@ import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 @Composable
 fun DeleteDialog(
     onDelete: (Int?) -> Unit,
+    onDismiss: () -> Unit,
     @StringRes dialogTitle: Int,
     @StringRes contentDescription: Int?,
     idItem: Int?
@@ -41,7 +42,7 @@ fun DeleteDialog(
                 style = MaterialTheme.typography.headlineSmall
             )
         },
-        onDismissRequest = { },
+        onDismissRequest = onDismiss,
         confirmButton = {
             Button(onClick = { onDelete(idItem) }) {
                 Text(
@@ -51,7 +52,7 @@ fun DeleteDialog(
             }
         },
         dismissButton = {
-            FilledTonalButton(onClick = { }) {
+            FilledTonalButton(onClick = onDismiss) {
                 Text(
                     stringResource(R.string.common_cancel),
                     style = MaterialTheme.typography.labelLarge,
@@ -69,6 +70,7 @@ fun DeleteDialogPreview() {
             modifier = Modifier.fillMaxSize(),
         ) {
             DeleteDialog(
+                {},
                 {},
                 R.string.common_delete,
                 R.string.common_delete,

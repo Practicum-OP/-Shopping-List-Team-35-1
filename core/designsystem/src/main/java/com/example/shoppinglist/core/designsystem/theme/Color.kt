@@ -1,4 +1,5 @@
 @file:Suppress("MagicNumber")
+
 package com.example.shoppinglist.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
@@ -24,7 +25,7 @@ val MediumTaupe = Color(0xFF8F8174)
 val GoldenBrown = Color(0xFF845416) // кнопка- primary (light)
 val Caramel = Color(0xFFBE8543)
 val Apricot = Color(0xFFFFBE77) // кнопка- primary (dark)
-val Tan = Color(0xFFE0C1A3)
+val Tan = Color(0xFFB0A092)
 val LightTan = Color(0xFFE5C5A7) // текст TextButton
 val MutedBrown = Color(0xFFA78C70) // кнопка cancel - secondary cont (dark)
 

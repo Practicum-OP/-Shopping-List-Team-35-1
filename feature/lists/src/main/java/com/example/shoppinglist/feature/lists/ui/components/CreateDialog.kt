@@ -36,7 +36,9 @@ fun CreateDialog(
     AlertDialog(
         icon = {
             Icon(
-                painter = painterResource(R.drawable.ic_add_list),
+                painter = painterResource(
+                    R.drawable.ic_add_list,
+                ),
                 contentDescription = stringResource(
                     R.string.lists_create_dialog_title,
                 ),
@@ -44,7 +46,9 @@ fun CreateDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.lists_create_dialog_title),
+                text = stringResource(
+                    R.string.lists_create_dialog_title,
+                ),
                 style = MaterialTheme.typography.headlineSmall,
             )
         },
@@ -55,28 +59,30 @@ fun CreateDialog(
                     textTitleList = newValue
                 },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = {
+                label = {
                     Text(
-                        text = stringResource(R.string.lists_name_placeholder),
+                        text = stringResource(
+                            R.string.lists_name_label,
+                        ),
                     )
                 },
-                label = if (textTitleList.isNotEmpty()) {
-                    {
-                        Text(
-                            text = stringResource(
-                                R.string.lists_name_label,
-                            ),
-                        )
-                    }
-                } else {
-                    null
+                placeholder = {
+                    Text(
+                        text = stringResource(
+                            R.string.lists_name_placeholder,
+                        ),
+                    )
                 },
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                    focusedBorderColor = MaterialTheme.colorScheme.outline,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
-                    focusedLabelColor = MaterialTheme.colorScheme.outline,
+                    unfocusedBorderColor =
+                    MaterialTheme.colorScheme.outline,
+                    focusedBorderColor =
+                    MaterialTheme.colorScheme.outline,
+                    unfocusedLabelColor =
+                    MaterialTheme.colorScheme.outline,
+                    focusedLabelColor =
+                    MaterialTheme.colorScheme.outline,
                 ),
             )
         },
@@ -89,7 +95,9 @@ fun CreateDialog(
                 enabled = isCreateEnabled,
             ) {
                 Text(
-                    text = stringResource(R.string.lists_create),
+                    text = stringResource(
+                        R.string.lists_create,
+                    ),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -100,7 +108,9 @@ fun CreateDialog(
                 onClick = onDismiss,
             ) {
                 Text(
-                    text = stringResource(R.string.lists_cancel),
+                    text = stringResource(
+                        R.string.lists_cancel,
+                    ),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                 )
@@ -111,12 +121,15 @@ fun CreateDialog(
 
 @DevicePreviews
 @Composable
-fun EditDialogPreviewAdd() {
+fun CreateDialogPreview() {
     ShoppingListTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            CreateDialog({ "sdfsdf" }, {})
+            CreateDialog(
+                onCreate = { },
+                onDismiss = { },
+            )
         }
     }
 }

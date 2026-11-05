@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShoppingListDao {
 
-    /**
-     * Списки в пользовательском порядке.
-     */
     @Query(
         """
         SELECT *
@@ -22,9 +19,6 @@ interface ShoppingListDao {
     )
     fun observeAll(): Flow<List<ShoppingListEntity>>
 
-    /**
-     * Списки по дате изменения: недавно изменённые сверху.
-     */
     @Query(
         """
         SELECT *
@@ -91,6 +85,20 @@ interface ShoppingListDao {
     suspend fun rename(
         id: String,
         name: String,
+        updatedAt: Long,
+    )
+
+    @Query(
+        """
+        UPDATE shopping_lists
+        SET iconKey = :iconKey,
+            updatedAt = :updatedAt
+        WHERE id = :id
+        """,
+    )
+    suspend fun updateIcon(
+        id: String,
+        iconKey: String,
         updatedAt: Long,
     )
 

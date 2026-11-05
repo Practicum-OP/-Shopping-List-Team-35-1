@@ -90,10 +90,10 @@ fun AppNavHost(
 
         composable(ScreenRoute.LISTS) {
             ListsRoute(
-                onOpenListDetail = {
-                    navController.navigate(ScreenRoute.LIST_DETAIL) {
-                        launchSingleTop = true
-                    }
+                onOpenListDetail = { listId ->
+                    navController.navigate(
+                        route = "list_detail/$listId",
+                    )
                 },
             )
         }

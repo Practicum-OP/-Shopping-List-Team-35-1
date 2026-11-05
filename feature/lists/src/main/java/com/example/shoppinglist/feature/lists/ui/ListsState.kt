@@ -1,10 +1,12 @@
 package com.example.shoppinglist.feature.lists.ui
 
 import com.example.shoppinglist.core.domain.lists.ShoppingList
+import com.example.shoppinglist.core.domain.settings.ThemeMode
 
 data class ListsState(
     val topContent: TopContent = TopContent.AppBar,
     val mainContent: MainContent = MainContent.Loading,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
 )
 
 sealed interface TopContent {
@@ -31,5 +33,4 @@ sealed interface MainContent {
     ) : MainContent
 
     data object NoSearchResults : MainContent
-
 }

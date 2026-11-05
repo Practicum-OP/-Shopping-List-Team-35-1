@@ -8,5 +8,6 @@ object ScreenRoute {
     const val RECOVERY = "recovery"
 
     const val LISTS = "lists"
-    const val LIST_DETAIL = "list_detail"
+    const val LIST_DETAIL = "list_detail/{listId}"
+    fun listDetail(listId: String) = "list_detail/$listId"
 }

@@ -13,17 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.example.shoppinglist.core.designsystem.R
 import com.example.shoppinglist.core.designsystem.preview.DevicePreviews
 import com.example.shoppinglist.core.designsystem.theme.ShoppingListTheme
 
 @Composable
 fun DeleteDialog(
-    onDelete: (Int?) -> Unit,
+    onDelete: (String?) -> Unit,
     onDismiss: () -> Unit,
-    @StringRes dialogTitle: Int,
+    dialogTitle: String,
     @StringRes contentDescription: Int?,
-    idItem: Int?
+    idItem: String?
 
 ) {
     AlertDialog(
@@ -38,8 +39,9 @@ fun DeleteDialog(
         },
         title = {
             Text(
-                text = stringResource(dialogTitle),
-                style = MaterialTheme.typography.headlineSmall
+                text = dialogTitle,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
             )
         },
         onDismissRequest = onDismiss,
@@ -47,7 +49,7 @@ fun DeleteDialog(
             Button(onClick = { onDelete(idItem) }) {
                 Text(
                     stringResource(R.string.common_delete),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         },
@@ -72,7 +74,7 @@ fun DeleteDialogPreview() {
             DeleteDialog(
                 {},
                 {},
-                R.string.common_delete,
+                stringResource(R.string.common_delete),
                 R.string.common_delete,
                 null,
             )

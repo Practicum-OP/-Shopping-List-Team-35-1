@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -44,14 +45,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.shoppinglist.feature.lists.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-private const val ACTION_COUNT = 3
 private const val ANIMATION_DURATION_MILLIS = 220
+private const val ACTION_COUNT = 3
 
 private val ItemHeight = 56.dp
 private val ItemVerticalPadding = 8.dp
@@ -61,7 +61,6 @@ private val ItemHorizontalPadding = 8.dp
 private val ItemTextEndPadding = 16.dp
 private val ItemTextSpacing = 8.dp
 private val ItemTextHeight = 24.dp
-private val ItemTextSize = 16.sp
 
 private val RoundIconSize = 40.dp
 private val RoundIconInnerSize = 24.dp
@@ -76,21 +75,13 @@ private enum class ListSwipeState {
     AlmostDismissed,
 }
 
-data class ListItemAction(
-    @DrawableRes val iconId: Int,
-    val contentDescription: String,
-    val onClick: () -> Unit,
-)
-
 @Composable
 fun RoundIcon(
     @DrawableRes iconId: Int,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    containerColor: androidx.compose.ui.graphics.Color =
-        MaterialTheme.colorScheme.secondaryContainer,
-    iconTint: androidx.compose.ui.graphics.Color =
-        MaterialTheme.colorScheme.onSecondaryContainer,
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    iconTint: Color = MaterialTheme.colorScheme.onSecondaryContainer,
 ) {
     Box(
         modifier = modifier
@@ -113,17 +104,13 @@ fun ShoppingListItem(
     name: String,
     @DrawableRes listIconId: Int,
     listIconContentDescription: String,
-    actions: List<ListItemAction>,
     onListIconClick: () -> Unit,
     onListClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onCopyClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
-    deleteContentDescription: String = "Удалить список",
 ) {
-    require(actions.size == ACTION_COUNT) {
-        "ShoppingListItem должен содержать ровно $ACTION_COUNT действия."
-    }
-
     val density = LocalDensity.current
     val coroutineScope = rememberCoroutineScope()
     val currentOnDeleteClick by rememberUpdatedState(onDeleteClick)
@@ -140,12 +127,8 @@ fun ShoppingListItem(
         mutableStateOf(ListSwipeState.Closed)
     }
 
-    var dragOffsetPx by remember {
+    var offsetPx by remember {
         mutableFloatStateOf(0f)
-    }
-
-    var isDragging by remember {
-        mutableStateOf(false)
     }
 
     var animationJob by remember {
@@ -173,65 +156,59 @@ fun ShoppingListItem(
     val actionsRevealOffsetPx = actionsWidthPx
         .coerceAtMost(fullDismissOffsetPx)
 
-    val renderedOffsetPx = if (isDragging) {
-        dragOffsetPx
-    } else {
-        offsetAnimation.value
-    }
-
     fun targetOffsetForState(
         state: ListSwipeState,
     ): Float {
         return when (state) {
-            ListSwipeState.Closed -> {
-                0f
+            ListSwipeState.Closed -> 0f
+            ListSwipeState.ActionsRevealed -> actionsRevealOffsetPx
+            ListSwipeState.AlmostDismissed -> fullDismissOffsetPx
+        }
+    }
+
+    fun animateToState(
+        targetState: ListSwipeState,
+        showDeleteDialog: Boolean = false,
+    ) {
+        animationJob?.cancel()
+
+        swipeState = targetState
+
+        val startOffsetPx = offsetPx.coerceIn(
+            minimumValue = 0f,
+            maximumValue = fullDismissOffsetPx,
+        )
+
+        val targetOffsetPx = targetOffsetForState(targetState)
+
+        animationJob = coroutineScope.launch {
+            offsetAnimation.snapTo(startOffsetPx)
+
+            offsetAnimation.animateTo(
+                targetValue = targetOffsetPx,
+                animationSpec = tween(
+                    durationMillis = ANIMATION_DURATION_MILLIS,
+                ),
+            ) {
+                offsetPx = value
             }
 
-            ListSwipeState.ActionsRevealed -> {
-                actionsRevealOffsetPx
-            }
+            offsetPx = targetOffsetPx
 
-            ListSwipeState.AlmostDismissed -> {
-                fullDismissOffsetPx
+            if (showDeleteDialog) {
+                currentOnDeleteClick()
             }
         }
     }
 
     fun animateToDeleteAndShowDialog() {
-        val currentOffsetPx = if (isDragging) {
-            dragOffsetPx
-        } else {
-            offsetAnimation.value
-        }
-
-        animationJob?.cancel()
-
-        swipeState = ListSwipeState.AlmostDismissed
-
-        animationJob = coroutineScope.launch {
-            isDragging = false
-
-            offsetAnimation.snapTo(
-                targetValue = currentOffsetPx.coerceIn(
-                    minimumValue = 0f,
-                    maximumValue = fullDismissOffsetPx,
-                ),
-            )
-
-            offsetAnimation.animateTo(
-                targetValue = fullDismissOffsetPx,
-                animationSpec = tween(
-                    durationMillis = ANIMATION_DURATION_MILLIS,
-                ),
-            )
-
-            currentOnDeleteClick()
-        }
+        animateToState(
+            targetState = ListSwipeState.AlmostDismissed,
+            showDeleteDialog = true,
+        )
     }
 
     fun settleAfterDrag() {
-        val currentOffsetPx = dragOffsetPx
-
         val firstThresholdPx = actionsRevealOffsetPx / 2f
 
         val secondThresholdPx = (
@@ -240,7 +217,7 @@ fun ShoppingListItem(
 
         val nextState = when (dragStartState) {
             ListSwipeState.Closed -> {
-                if (currentOffsetPx >= firstThresholdPx) {
+                if (offsetPx >= firstThresholdPx) {
                     ListSwipeState.ActionsRevealed
                 } else {
                     ListSwipeState.Closed
@@ -249,11 +226,11 @@ fun ShoppingListItem(
 
             ListSwipeState.ActionsRevealed -> {
                 when {
-                    currentOffsetPx < firstThresholdPx -> {
+                    offsetPx < firstThresholdPx -> {
                         ListSwipeState.Closed
                     }
 
-                    currentOffsetPx >= secondThresholdPx -> {
+                    offsetPx >= secondThresholdPx -> {
                         ListSwipeState.AlmostDismissed
                     }
 
@@ -264,7 +241,7 @@ fun ShoppingListItem(
             }
 
             ListSwipeState.AlmostDismissed -> {
-                if (currentOffsetPx < secondThresholdPx) {
+                if (offsetPx < secondThresholdPx) {
                     ListSwipeState.ActionsRevealed
                 } else {
                     ListSwipeState.AlmostDismissed
@@ -272,24 +249,7 @@ fun ShoppingListItem(
             }
         }
 
-        swipeState = nextState
-
-        val targetOffsetPx = targetOffsetForState(nextState)
-
-        animationJob?.cancel()
-
-        animationJob = coroutineScope.launch {
-            offsetAnimation.snapTo(currentOffsetPx)
-
-            isDragging = false
-
-            offsetAnimation.animateTo(
-                targetValue = targetOffsetPx,
-                animationSpec = tween(
-                    durationMillis = ANIMATION_DURATION_MILLIS,
-                ),
-            )
-        }
+        animateToState(nextState)
     }
 
     Box(
@@ -302,54 +262,57 @@ fun ShoppingListItem(
             },
     ) {
         if (swipeState == ListSwipeState.AlmostDismissed) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                IconButton(
-                    onClick = {
-                        animateToDeleteAndShowDialog()
-                    },
-                    modifier = Modifier.size(RoundIconSize),
-                ) {
-                    RoundIcon(
-                        iconId = R.drawable.ic_delete,
-                        contentDescription = stringResource(R.string.lists_delete_all_dialog_title),
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        iconTint = MaterialTheme.colorScheme.onPrimary,
-                    )
-                }
-            }
+            SwipeActionButton(
+                iconId = R.drawable.ic_delete,
+                contentDescription = stringResource(
+                    R.string.lists_delete_list,
+                ),
+                onClick = {
+                    animateToDeleteAndShowDialog()
+                },
+                modifier = Modifier.align(Alignment.Center),
+                containerColor = MaterialTheme.colorScheme.primary,
+                iconTint = MaterialTheme.colorScheme.onPrimary,
+            )
         } else {
             Row(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd),
+                modifier = Modifier.align(Alignment.CenterEnd),
                 horizontalArrangement = Arrangement.spacedBy(
                     ActionIconSpacing,
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                actions.forEachIndexed { index, action ->
-                    val isDeleteAction = index == actions.lastIndex
+                val actionsEnabled =
+                    swipeState == ListSwipeState.ActionsRevealed
 
-                    IconButton(
-                        onClick = {
-                            if (isDeleteAction) {
-                                animateToDeleteAndShowDialog()
-                            } else {
-                                action.onClick()
-                            }
-                        },
-                        enabled = swipeState ==
-                            ListSwipeState.ActionsRevealed,
-                        modifier = Modifier.size(RoundIconSize),
-                    ) {
-                        RoundIcon(
-                            iconId = action.iconId,
-                            contentDescription = action.contentDescription,
-                        )
-                    }
-                }
+                SwipeActionButton(
+                    iconId = R.drawable.ic_edit,
+                    contentDescription = stringResource(
+                        R.string.lists_edit_list,
+                    ),
+                    onClick = onEditClick,
+                    enabled = actionsEnabled,
+                )
+
+                SwipeActionButton(
+                    iconId = R.drawable.ic_copy,
+                    contentDescription = stringResource(
+                        R.string.lists_copy_list,
+                    ),
+                    onClick = onCopyClick,
+                    enabled = actionsEnabled,
+                )
+
+                SwipeActionButton(
+                    iconId = R.drawable.ic_delete,
+                    contentDescription = stringResource(
+                        R.string.lists_delete_list,
+                    ),
+                    onClick = {
+                        animateToDeleteAndShowDialog()
+                    },
+                    enabled = actionsEnabled,
+                )
             }
         }
 
@@ -360,7 +323,7 @@ fun ShoppingListItem(
                 .height(ItemHeight)
                 .offset {
                     IntOffset(
-                        x = -renderedOffsetPx.roundToInt(),
+                        x = -offsetPx.roundToInt(),
                         y = 0,
                     )
                 }
@@ -371,36 +334,33 @@ fun ShoppingListItem(
                     detectHorizontalDragGestures(
                         onDragStart = {
                             animationJob?.cancel()
-
                             dragStartState = swipeState
-                            dragOffsetPx = offsetAnimation.value
-                            isDragging = true
                         },
                         onHorizontalDrag = { change, dragAmount ->
                             change.consume()
 
-                            val minimumOffsetPx = when (dragStartState) {
-                                ListSwipeState.AlmostDismissed -> {
+                            val minimumOffsetPx =
+                                if (
+                                    dragStartState ==
+                                    ListSwipeState.AlmostDismissed
+                                ) {
                                     actionsRevealOffsetPx
-                                }
-
-                                else -> {
+                                } else {
                                     0f
                                 }
-                            }
 
-                            val maximumOffsetPx = when (dragStartState) {
-                                ListSwipeState.Closed -> {
+                            val maximumOffsetPx =
+                                if (
+                                    dragStartState ==
+                                    ListSwipeState.Closed
+                                ) {
                                     actionsRevealOffsetPx
-                                }
-
-                                else -> {
+                                } else {
                                     fullDismissOffsetPx
                                 }
-                            }
 
-                            dragOffsetPx = (
-                                dragOffsetPx - dragAmount
+                            offsetPx = (
+                                offsetPx - dragAmount
                                 ).coerceIn(
                                 minimumValue = minimumOffsetPx,
                                 maximumValue = maximumOffsetPx,
@@ -410,7 +370,7 @@ fun ShoppingListItem(
                             settleAfterDrag()
                         },
                         onDragCancel = {
-                            settleAfterDrag()
+                            animateToState(dragStartState)
                         },
                     )
                 },
@@ -456,7 +416,6 @@ fun ShoppingListItem(
                         text = name,
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodyLarge,
-                        fontSize = ItemTextSize,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -464,5 +423,29 @@ fun ShoppingListItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SwipeActionButton(
+    @DrawableRes iconId: Int,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
+    iconTint: Color = MaterialTheme.colorScheme.primary,
+) {
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.size(RoundIconSize),
+    ) {
+        RoundIcon(
+            iconId = iconId,
+            contentDescription = contentDescription,
+            containerColor = containerColor,
+            iconTint = iconTint,
+        )
     }
 }

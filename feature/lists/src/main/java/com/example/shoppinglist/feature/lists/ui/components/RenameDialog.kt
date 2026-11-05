@@ -36,7 +36,7 @@ fun RenameDialog(
                 text = stringResource(
                     R.string.lists_rename_dialog_title,
                 ),
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.bodyLarge,
             )
         },
         text = {

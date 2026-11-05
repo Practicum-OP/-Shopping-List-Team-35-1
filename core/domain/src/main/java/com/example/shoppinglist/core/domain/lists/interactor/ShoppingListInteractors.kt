@@ -68,7 +68,7 @@ class CopyShoppingList(
 
         repository.copy(
             id = id,
-            copiedName = "${source.name} Копия",
+            copiedName = "${source.name} (Копия)",
         )
     }
 }

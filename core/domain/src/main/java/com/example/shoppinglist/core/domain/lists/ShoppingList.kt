@@ -10,6 +10,6 @@ data class ShoppingList(
     val updatedAt: Long,
 ) {
     companion object {
-        const val DEFAULT_ICON_KEY = "shopping_cart"
+        const val DEFAULT_ICON_KEY = "list"
     }
 }

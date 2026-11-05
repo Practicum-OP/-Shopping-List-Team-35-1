@@ -106,11 +106,11 @@ annotation class DevicePreviews
 @DevicePreviews
 @Composable
 private fun MyComponentPreview() {
-    ShoppingTheme {
+    ShoppingListTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            // тут помещается наш экран
+            // тут помещается наш экран/компонент
         }
     }
 }

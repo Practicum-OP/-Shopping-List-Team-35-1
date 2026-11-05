@@ -9,16 +9,16 @@ import androidx.compose.runtime.Composable
 
 val LightColorScheme = lightColorScheme(
     // Основной акцент
-    primary = GoldenBrown,
-    onPrimary = White,
+    primary = GoldenBrown, // + Кнопка, TextButton, рамка и label TextField
+    onPrimary = White, // + Текст кнопки
     primaryContainer = PalePeach,
     onPrimaryContainer = DarkChocolate,
 
     // Вторичный акцент
-    secondary = GoldenBrown, // Временное соответствие
+    secondary = DarkTaupe, // + Иконка диалогов
     onSecondary = White, // Временное соответствие
-    secondaryContainer = SoftPeach,
-    onSecondaryContainer = DarkWalnut,
+    secondaryContainer = SoftPeach, // + дополнительная кнопка Диалога (Отмена)
+    onSecondaryContainer = DarkWalnut, // + текст дополнительной кнопки Диалога (Отмена)
 
     // Третичный акцент — отсутствует в выписанной палитре
     tertiary = GoldenBrown,
@@ -27,18 +27,18 @@ val LightColorScheme = lightColorScheme(
     onTertiaryContainer = DarkWalnut,
 
     // Фон
-    background = WarmIvory,
+    background = WarmIvory, // + Фон
     onBackground = DeepBrown, // Использован onSurface
 
     // Поверхности
-    surface = WarmIvory, // Использован background
-    onSurface = DeepBrown,
+    surface = WarmIvory, // + TopBar
+    onSurface = DeepBrown, // + Цвет текста Далогового окна, Текстового поля
     surfaceVariant = CreamBeige, // Временное соответствие
-    onSurfaceVariant = DarkTaupe,
+    onSurfaceVariant = GoldenBrown, // DarkTaupe,
 
     // Контуры
-    outline = WarmTaupe,
-    outlineVariant = SandBeige, // Предположение для цвета с пометкой ???
+    outline = GoldenBrown, // + рамка текстового поля WarmTaupe,
+    outlineVariant = WarmTaupe, // + линия под строкой поиска
 
     // Инверсные роли — временные соответствия
     inverseSurface = CoffeeBrown,
@@ -50,8 +50,8 @@ val LightColorScheme = lightColorScheme(
     surfaceBright = WarmIvory, // Временное соответствие
     surfaceContainerLowest = White, // Временное соответствие
     surfaceContainerLow = WarmIvory, // Временное соответствие
-    surfaceContainer = CreamBeige, // Временное соответствие
-    surfaceContainerHigh = CreamBeige,
+    surfaceContainer = WarmIvory, // Временное соответствие
+    surfaceContainerHigh = CreamBeige, // + Цвет окна Диалога
     surfaceContainerHighest = LightBeige,
 
     surfaceTint = GoldenBrown,
@@ -63,16 +63,16 @@ val LightColorScheme = lightColorScheme(
 
 val DarkColorScheme = darkColorScheme(
     // Основной акцент: dark-medium-contrast
-    primary = Apricot,
-    onPrimary = White,
+    primary = Apricot, // +
+    onPrimary = Brown, // +,
     primaryContainer = Caramel,
     onPrimaryContainer = Black, // Временное соответствие
 
     // Вторичный акцент: dark-medium-contrast
-    secondary = LightTan,
+    secondary = PaleTaupe, // +
     onSecondary = Black, // Временное соответствие
-    secondaryContainer = MutedBrown,
-    onSecondaryContainer = Black,
+    secondaryContainer = MutedBrown, // +
+    onSecondaryContainer = Black, // +
 
     // Третичный акцент — отсутствует в выписанной палитре
     tertiary = LightTan,
@@ -81,18 +81,18 @@ val DarkColorScheme = darkColorScheme(
     onTertiaryContainer = Black,
 
     // Фон
-    background = BlackBrown,
+    background = BlackBrown, // +
     onBackground = RoseWhite, // Использован medium-contrast onSurface
 
     // Поверхности: dark-medium-contrast
-    surface = BlackBrown,
-    onSurface = RoseWhite,
+    surface = BlackBrown, // +
+    onSurface = RoseWhite, // +
     surfaceVariant = CocoaBrown, // Временное соответствие
-    onSurfaceVariant = PaleTaupe,
+    onSurfaceVariant = LightTan, // PaleTaupe,
 
     // Контуры
-    outline = MediumTaupe, // Временно совпадает с outlineVariant
-    outlineVariant = MediumTaupe,
+    outline = LightTan, // +
+    outlineVariant = Tan, // + линия под строкой поиска
 
     // Инверсные роли
     inverseSurface = LightBeige, // Временное соответствие
@@ -105,7 +105,7 @@ val DarkColorScheme = darkColorScheme(
     surfaceContainerLowest = NearBlack,
     surfaceContainerLow = BlackBrown, // Временное соответствие
     surfaceContainer = CoffeeBrown, // Временное соответствие
-    surfaceContainerHigh = CoffeeBrown,
+    surfaceContainerHigh = CoffeeBrown, // +
     surfaceContainerHighest = CocoaBrown,
 
     surfaceTint = Apricot,

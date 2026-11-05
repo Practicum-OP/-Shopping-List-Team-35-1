@@ -38,4 +38,7 @@ object AppDimens {
     // Иллюстрация пустого состояния
     val emptyStateImageWidth = 324.dp
     val emptyStateImageHeight = 300.dp
+
+    // Разделители
+    val dividerThickness = 1.dp
 }

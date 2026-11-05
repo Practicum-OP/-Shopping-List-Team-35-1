@@ -1,18 +1,18 @@
 package com.example.shoppinglist.feature.lists.ui
 
-sealed interface ListsEvent {
+import com.example.shoppinglist.core.domain.settings.ThemeMode
 
-    // Поиск.
+sealed interface ListsEvent {
 
     data object SearchOpened : ListsEvent
 
     data object SearchClosed : ListsEvent
 
+    data object SearchCleared : ListsEvent
+
     data class SearchQueryChanged(
         val query: String,
     ) : ListsEvent
-
-    // Создание и удаление списков.
 
     data class CreateListConfirmed(
         val name: String,
@@ -20,13 +20,13 @@ sealed interface ListsEvent {
 
     data object DeleteAllListsConfirmed : ListsEvent
 
-    // Настройки оформления.
+    data class ThemeModeChanged(
+        val mode: ThemeMode,
+    ) : ListsEvent
 
     data class ThemeChanged(
         val isDarkTheme: Boolean,
     ) : ListsEvent
-
-    // Действия с конкретным списком.
 
     data class ListIconSelected(
         val listId: String,

@@ -50,7 +50,7 @@ val LightColorScheme = lightColorScheme(
     surfaceBright = WarmIvory, // Временное соответствие
     surfaceContainerLowest = White, // Временное соответствие
     surfaceContainerLow = WarmIvory, // Временное соответствие
-    surfaceContainer = CreamBeige, // Временное соответствие
+    surfaceContainer = WarmIvory, // Временное соответствие
     surfaceContainerHigh = CreamBeige, // + Цвет окна Диалога
     surfaceContainerHighest = LightBeige,
 

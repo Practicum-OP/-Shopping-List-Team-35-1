@@ -3,11 +3,9 @@ package com.example.shoppinglist.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.shoppinglist.feature.auth.login.LoginRoute
 import com.example.shoppinglist.feature.auth.recovery.RecoveryRoute
 import com.example.shoppinglist.feature.auth.registration.RegistrationRoute
@@ -92,15 +90,20 @@ fun AppNavHost(
 
         composable(ScreenRoute.LISTS) {
             ListsRoute(
-                onOpenListDetail = { listId -> navController.navigate(ScreenRoute.listDetail(listId)) },
+                onOpenListDetail = { listId ->
+                    navController.navigate(
+                        route = "list_detail/$listId",
+                    )
+                },
             )
         }
 
-        composable(
-            route = ScreenRoute.LIST_DETAIL,
-            arguments = listOf(navArgument("listId") { type = NavType.StringType }),
-        ) {
-            ListDetailRoute(onBackToLists = { navController.popBackStack() })
+        composable(ScreenRoute.LIST_DETAIL) {
+            ListDetailRoute(
+                onBackToLists = {
+                    navController.popBackStack()
+                },
+            )
         }
     }
 }

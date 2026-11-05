@@ -38,12 +38,4 @@ val dataModule = module {
             context = androidContext(),
         )
     }
-
-    single {
-        get<ShoppingListDatabase>().shoppingItemDao()
-    }
-
-    single {
-        get<ShoppingListDatabase>().itemHistoryDao()
-    }
 }

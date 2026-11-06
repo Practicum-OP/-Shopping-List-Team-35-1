@@ -4,9 +4,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shoppinglist.feature.auth.model.CollectAuthEffects
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -22,7 +23,7 @@ fun LoginRoute(
         SnackbarHostState()
     }
 
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
     CollectAuthEffects(
         effects = viewModel.effects,
@@ -41,11 +42,13 @@ fun LoginRoute(
             }
 
             is LoginEffect.ShowMessage -> {
-                snackbarHostState.showSnackbar(
-                    message = context.getString(
-                        effect.messageRes,
-                    ),
-                )
+                launch {
+                    snackbarHostState.showSnackbar(
+                        message = resources.getString(
+                            effect.messageRes,
+                        ),
+                    )
+                }
             }
         }
     }

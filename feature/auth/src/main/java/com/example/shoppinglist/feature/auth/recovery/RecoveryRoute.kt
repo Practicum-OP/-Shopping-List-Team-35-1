@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalResources
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shoppinglist.feature.auth.model.CollectAuthEffects
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -36,11 +37,13 @@ fun RecoveryRoute(
             }
 
             is RecoveryEffect.ShowMessage -> {
-                snackbarHostState.showSnackbar(
-                    message = resources.getString(
-                        effect.messageRes,
-                    ),
-                )
+                launch {
+                    snackbarHostState.showSnackbar(
+                        message = resources.getString(
+                            effect.messageRes,
+                        ),
+                    )
+                }
             }
         }
     }

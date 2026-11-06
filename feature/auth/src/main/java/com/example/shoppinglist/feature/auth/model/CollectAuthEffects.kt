@@ -7,13 +7,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 @Composable
 internal fun <T> CollectAuthEffects(
     effects: Flow<T>,
-    onEffect: suspend (T) -> Unit,
+    onEffect: suspend CoroutineScope.(T) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val currentOnEffect by rememberUpdatedState(onEffect)
@@ -25,8 +25,10 @@ internal fun <T> CollectAuthEffects(
         lifecycleOwner.lifecycle.repeatOnLifecycle(
             Lifecycle.State.STARTED,
         ) {
+            val effectScope = this
+
             effects.collect { effect ->
-                currentOnEffect(effect)
+                currentOnEffect(effectScope, effect)
             }
         }
     }

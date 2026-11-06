@@ -38,7 +38,7 @@ class RestoreAuthSession(
             }
 
             is AuthResult.Failure -> {
-                result
+                allowOfflineAccessOrFail(result)
             }
         }
     }
@@ -75,6 +75,16 @@ class RestoreAuthSession(
         ) {
             sessionRepository.clearSession()
             AuthResult.Success(false)
+        } else {
+            allowOfflineAccessOrFail(failure)
+        }
+    }
+
+    private fun allowOfflineAccessOrFail(
+        failure: AuthResult.Failure,
+    ): AuthResult<Boolean> {
+        return if (failure.error == AuthError.Network) {
+            AuthResult.Success(true)
         } else {
             failure
         }

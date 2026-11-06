@@ -129,26 +129,14 @@ class LoginViewModel(
     }
 
     private fun performLogin() {
-        val current = _state.value
-
-        val validated = current.copy(
-            emailError = AuthValidator.validateEmail(
-                current.email,
-            ),
-            passwordError = AuthValidator.validatePassword(
-                current.password,
-            ),
-        )
-
+        val validated = validateLoginState(_state.value)
         _state.value = validated
 
         if (!validated.isLoginEnabled) {
             return
         }
 
-        _state.value = validated.copy(
-            isLoading = true,
-        )
+        _state.value = validated.copy(isLoading = true)
 
         viewModelScope.launch {
             val result = authOperation {
@@ -158,33 +146,44 @@ class LoginViewModel(
                 )
             }
 
-            _state.update { state ->
-                state.copy(
-                    isLoading = false,
-                )
+            _state.update { current ->
+                current.copy(isLoading = false)
             }
 
-            when (result) {
-                is AuthResult.Success -> {
-                    _state.update { state ->
-                        state.copy(
-                            password = "",
-                            isPasswordVisible = false,
-                        )
-                    }
+            handleLoginResult(result)
+        }
+    }
 
-                    effectChannel.send(
-                        LoginEffect.OpenLists,
+    private fun validateLoginState(
+        current: LoginState,
+    ): LoginState {
+        return current.copy(
+            emailError = AuthValidator.validateEmail(current.email),
+            passwordError = AuthValidator.validatePassword(current.password),
+        )
+    }
+
+    private suspend fun handleLoginResult(
+        result: AuthResult<Unit>,
+    ) {
+        when (result) {
+            is AuthResult.Success -> {
+                _state.update { current ->
+                    current.copy(
+                        password = "",
+                        isPasswordVisible = false,
                     )
                 }
 
-                is AuthResult.Failure -> {
-                    effectChannel.send(
-                        LoginEffect.ShowMessage(
-                            messageRes = result.error.toMessageRes(),
-                        ),
-                    )
-                }
+                effectChannel.send(LoginEffect.OpenLists)
+            }
+
+            is AuthResult.Failure -> {
+                effectChannel.send(
+                    LoginEffect.ShowMessage(
+                        messageRes = result.error.toMessageRes(),
+                    ),
+                )
             }
         }
     }

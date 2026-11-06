@@ -4,6 +4,7 @@ import com.example.shoppinglist.core.domain.auth.AuthRepository
 import com.example.shoppinglist.core.domain.auth.AuthSessionRepository
 import com.example.shoppinglist.core.domain.auth.model.AuthError
 import com.example.shoppinglist.core.domain.auth.model.AuthResult
+import com.example.shoppinglist.core.domain.auth.model.AuthSession
 
 class RestoreAuthSession(
     private val authRepository: AuthRepository,
@@ -12,33 +13,48 @@ class RestoreAuthSession(
 
     suspend operator fun invoke(): AuthResult<Boolean> {
         val session = sessionRepository.getSession()
-            ?: return AuthResult.Success(false)
 
-        when (
-            val checkResult = authRepository.isTokenValid(
-                accessToken = session.tokens.accessToken,
-            )
-        ) {
+        return if (session == null) {
+            AuthResult.Success(false)
+        } else {
+            restoreSession(session)
+        }
+    }
+
+    private suspend fun restoreSession(
+        session: AuthSession,
+    ): AuthResult<Boolean> {
+        val result = authRepository.isTokenValid(
+            accessToken = session.tokens.accessToken,
+        )
+
+        return when (result) {
             is AuthResult.Success -> {
-                if (checkResult.data) {
-                    return AuthResult.Success(true)
+                if (result.data) {
+                    AuthResult.Success(true)
+                } else {
+                    refreshSession(session)
                 }
             }
 
             is AuthResult.Failure -> {
-                return checkResult
+                result
             }
         }
+    }
 
-        return when (
-            val refreshResult = authRepository.refresh(
-                refreshToken = session.tokens.refreshToken,
-            )
-        ) {
+    private suspend fun refreshSession(
+        session: AuthSession,
+    ): AuthResult<Boolean> {
+        val result = authRepository.refresh(
+            refreshToken = session.tokens.refreshToken,
+        )
+
+        return when (result) {
             is AuthResult.Success -> {
                 sessionRepository.saveSession(
                     session.copy(
-                        tokens = refreshResult.data,
+                        tokens = result.data,
                     ),
                 )
 
@@ -46,16 +62,21 @@ class RestoreAuthSession(
             }
 
             is AuthResult.Failure -> {
-                if (
-                    refreshResult.error ==
-                    AuthError.InvalidRefreshToken
-                ) {
-                    sessionRepository.clearSession()
-                    AuthResult.Success(false)
-                } else {
-                    refreshResult
-                }
+                handleRefreshFailure(result)
             }
+        }
+    }
+
+    private suspend fun handleRefreshFailure(
+        failure: AuthResult.Failure,
+    ): AuthResult<Boolean> {
+        return if (
+            failure.error == AuthError.InvalidRefreshToken
+        ) {
+            sessionRepository.clearSession()
+            AuthResult.Success(false)
+        } else {
+            failure
         }
     }
 }

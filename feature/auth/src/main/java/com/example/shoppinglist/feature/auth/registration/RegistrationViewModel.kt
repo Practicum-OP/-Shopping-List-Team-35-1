@@ -20,12 +20,9 @@ class RegistrationViewModel(
     private val register: Register,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(
-        RegistrationState(),
-    )
+    private val _state = MutableStateFlow(RegistrationState())
 
-    val state: StateFlow<RegistrationState> =
-        _state.asStateFlow()
+    val state: StateFlow<RegistrationState> = _state.asStateFlow()
 
     private val effectChannel = Channel<RegistrationEffect>(
         capacity = Channel.BUFFERED,
@@ -40,106 +37,107 @@ class RegistrationViewModel(
         }
 
         when (event) {
-            is RegistrationEvent.EmailChanged -> {
-                _state.update { current ->
-                    current.copy(
-                        email = event.email,
-                        emailError = AuthValidator.validateEmail(
-                            event.email,
-                        ),
-                    )
-                }
-            }
+            is RegistrationEvent.EmailChanged ->
+                changeEmail(event.email)
 
-            is RegistrationEvent.PasswordChanged -> {
-                _state.update { current ->
-                    current.copy(
-                        password = event.password,
-                        passwordError = AuthValidator.validatePassword(
-                            event.password,
-                        ),
-                        passwordRepeatError =
-                        AuthValidator.validatePasswordRepeat(
-                            password = event.password,
-                            passwordRepeat =
-                            current.passwordRepeat,
-                        ),
-                    )
-                }
-            }
+            is RegistrationEvent.PasswordChanged ->
+                changePassword(event.password)
 
-            is RegistrationEvent.PasswordRepeatChanged -> {
-                _state.update { current ->
-                    current.copy(
-                        passwordRepeat = event.passwordRepeat,
-                        passwordRepeatError =
-                        AuthValidator.validatePasswordRepeat(
-                            password = current.password,
-                            passwordRepeat =
-                            event.passwordRepeat,
-                        ),
-                    )
-                }
-            }
+            is RegistrationEvent.PasswordRepeatChanged ->
+                changePasswordRepeat(event.passwordRepeat)
 
-            RegistrationEvent.PasswordVisibilityToggled -> {
-                _state.update { current ->
-                    current.copy(
-                        isPasswordVisible =
-                        !current.isPasswordVisible,
-                    )
-                }
-            }
+            RegistrationEvent.PasswordVisibilityToggled ->
+                togglePasswordVisibility()
 
-            RegistrationEvent.PasswordRepeatVisibilityToggled -> {
-                _state.update { current ->
-                    current.copy(
-                        isPasswordRepeatVisible =
-                        !current.isPasswordRepeatVisible,
-                    )
-                }
-            }
+            RegistrationEvent.PasswordRepeatVisibilityToggled ->
+                togglePasswordRepeatVisibility()
 
-            RegistrationEvent.RegistrationClicked -> {
+            RegistrationEvent.RegistrationClicked ->
                 performRegistration()
-            }
 
-            RegistrationEvent.BackClicked -> {
-                viewModelScope.launch {
-                    effectChannel.send(
-                        RegistrationEffect.NavigateBack,
-                    )
-                }
-            }
+            RegistrationEvent.BackClicked ->
+                navigateBack()
         }
     }
 
-    private fun performRegistration() {
-        val current = _state.value
+    private fun changeEmail(email: String) {
+        _state.update { current ->
+            current.copy(
+                email = email,
+                emailError = AuthValidator.validateEmail(email),
+            )
+        }
+    }
 
-        val validated = current.copy(
-            emailError = AuthValidator.validateEmail(
-                current.email,
-            ),
-            passwordError = AuthValidator.validatePassword(
-                current.password,
-            ),
-            passwordRepeatError =
-            AuthValidator.validatePasswordRepeat(
+    private fun changePassword(password: String) {
+        _state.update { current ->
+            current.copy(
+                password = password,
+                passwordError = AuthValidator.validatePassword(password),
+                passwordRepeatError = AuthValidator.validatePasswordRepeat(
+                    password = password,
+                    passwordRepeat = current.passwordRepeat,
+                ),
+            )
+        }
+    }
+
+    private fun changePasswordRepeat(passwordRepeat: String) {
+        _state.update { current ->
+            current.copy(
+                passwordRepeat = passwordRepeat,
+                passwordRepeatError = AuthValidator.validatePasswordRepeat(
+                    password = current.password,
+                    passwordRepeat = passwordRepeat,
+                ),
+            )
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        _state.update { current ->
+            current.copy(
+                isPasswordVisible = !current.isPasswordVisible,
+            )
+        }
+    }
+
+    private fun togglePasswordRepeatVisibility() {
+        _state.update { current ->
+            current.copy(
+                isPasswordRepeatVisible = !current.isPasswordRepeatVisible,
+            )
+        }
+    }
+
+    private fun navigateBack() {
+        viewModelScope.launch {
+            effectChannel.send(RegistrationEffect.NavigateBack)
+        }
+    }
+
+    private fun validateState(
+        current: RegistrationState,
+    ): RegistrationState {
+        return current.copy(
+            emailError = AuthValidator.validateEmail(current.email),
+            passwordError = AuthValidator.validatePassword(current.password),
+            passwordRepeatError = AuthValidator.validatePasswordRepeat(
                 password = current.password,
                 passwordRepeat = current.passwordRepeat,
             ),
         )
+    }
 
+    private fun performRegistration() {
+        val validated = validateState(_state.value)
         _state.value = validated
 
         if (!validated.isRegistrationEnabled) {
             return
         }
 
-        _state.value = validated.copy(
-            isLoading = true,
-        )
+        _state.value = validated.copy(isLoading = true)
 
         viewModelScope.launch {
             val result = authOperation {
@@ -149,36 +147,43 @@ class RegistrationViewModel(
                 )
             }
 
-            _state.update { state ->
-                state.copy(
-                    isLoading = false,
+            _state.update { current ->
+                current.copy(isLoading = false)
+            }
+
+            handleRegistrationResult(result)
+        }
+    }
+
+    private suspend fun handleRegistrationResult(
+        result: AuthResult<Unit>,
+    ) {
+        when (result) {
+            is AuthResult.Success -> {
+                clearPasswords()
+                effectChannel.send(
+                    RegistrationEffect.RegistrationCompleted,
                 )
             }
 
-            when (result) {
-                is AuthResult.Success -> {
-                    _state.update { state ->
-                        state.copy(
-                            password = "",
-                            passwordRepeat = "",
-                            isPasswordVisible = false,
-                            isPasswordRepeatVisible = false,
-                        )
-                    }
-
-                    effectChannel.send(
-                        RegistrationEffect.RegistrationCompleted,
-                    )
-                }
-
-                is AuthResult.Failure -> {
-                    effectChannel.send(
-                        RegistrationEffect.ShowMessage(
-                            messageRes = result.error.toMessageRes(),
-                        ),
-                    )
-                }
+            is AuthResult.Failure -> {
+                effectChannel.send(
+                    RegistrationEffect.ShowMessage(
+                        messageRes = result.error.toMessageRes(),
+                    ),
+                )
             }
+        }
+    }
+
+    private fun clearPasswords() {
+        _state.update { current ->
+            current.copy(
+                password = "",
+                passwordRepeat = "",
+                isPasswordVisible = false,
+                isPasswordRepeatVisible = false,
+            )
         }
     }
 }

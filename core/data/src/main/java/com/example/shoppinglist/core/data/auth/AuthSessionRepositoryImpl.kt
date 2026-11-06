@@ -28,38 +28,12 @@ class AuthSessionRepositoryImpl(
     override suspend fun getSession(): AuthSession? =
         withContext(Dispatchers.IO) {
             val encrypted = dataStore.data.first()[SESSION_KEY]
-                ?: return@withContext null
 
-            val storedSession = try {
-                json.decodeFromString<StoredAuthSession>(
-                    cipher.decrypt(encrypted),
-                )
-            } catch (_: GeneralSecurityException) {
-                clearSession()
-                return@withContext null
-            } catch (_: SerializationException) {
-                clearSession()
-                return@withContext null
-            } catch (_: IllegalArgumentException) {
-                clearSession()
-                return@withContext null
+            if (encrypted == null) {
+                null
+            } else {
+                restoreStoredSession(encrypted)
             }
-
-            if (
-                storedSession.accessToken.isBlank() ||
-                storedSession.refreshToken.isBlank()
-            ) {
-                clearSession()
-                return@withContext null
-            }
-
-            AuthSession(
-                userId = storedSession.userId,
-                tokens = AuthTokens(
-                    accessToken = storedSession.accessToken,
-                    refreshToken = storedSession.refreshToken,
-                ),
-            )
         }
 
     override suspend fun saveSession(
@@ -85,6 +59,45 @@ class AuthSessionRepositoryImpl(
     override suspend fun clearSession() {
         dataStore.edit { preferences ->
             preferences.remove(SESSION_KEY)
+        }
+    }
+
+    private suspend fun restoreStoredSession(
+        encrypted: String,
+    ): AuthSession? {
+        val storedSession = decodeStoredSession(encrypted)
+
+        return if (
+            storedSession == null ||
+            storedSession.accessToken.isBlank() ||
+            storedSession.refreshToken.isBlank()
+        ) {
+            clearSession()
+            null
+        } else {
+            AuthSession(
+                userId = storedSession.userId,
+                tokens = AuthTokens(
+                    accessToken = storedSession.accessToken,
+                    refreshToken = storedSession.refreshToken,
+                ),
+            )
+        }
+    }
+
+    private fun decodeStoredSession(
+        encrypted: String,
+    ): StoredAuthSession? {
+        return try {
+            json.decodeFromString<StoredAuthSession>(
+                cipher.decrypt(encrypted),
+            )
+        } catch (_: GeneralSecurityException) {
+            null
+        } catch (_: SerializationException) {
+            null
+        } catch (_: IllegalArgumentException) {
+            null
         }
     }
 }

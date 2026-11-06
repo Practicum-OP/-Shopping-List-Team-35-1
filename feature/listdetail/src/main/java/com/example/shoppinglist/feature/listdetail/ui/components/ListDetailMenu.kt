@@ -35,6 +35,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
+import com.example.shoppinglist.core.designsystem.theme.sortLabel
+import com.example.shoppinglist.core.designsystem.theme.sortLabelHighlighted
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import com.example.shoppinglist.feature.listdetail.R
 import com.example.shoppinglist.core.designsystem.R as DesignR
@@ -99,6 +101,7 @@ private fun SortMenuRow(
                 Modifier
             },
             subtitleRes = sortMode.labelRes,
+            highlighted = isExpanded,
             trailing = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = false,
@@ -151,6 +154,7 @@ private fun MenuRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     @StringRes subtitleRes: Int? = null,
+    highlighted: Boolean = false,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -175,7 +179,11 @@ private fun MenuRow(
                 Text(
                     text = stringResource(res),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (highlighted) {
+                        MaterialTheme.colorScheme.sortLabelHighlighted
+                    } else {
+                        MaterialTheme.colorScheme.sortLabel
+                    },
                 )
             }
         }

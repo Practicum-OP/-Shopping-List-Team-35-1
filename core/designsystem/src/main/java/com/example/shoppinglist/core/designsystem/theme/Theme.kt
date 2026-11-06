@@ -34,7 +34,7 @@ val LightColorScheme = lightColorScheme(
     surface = WarmIvory, // + TopBar
     onSurface = DeepBrown, // + Цвет текста Далогового окна, Текстового поля
     surfaceVariant = CreamBeige, // Временное соответствие
-    onSurfaceVariant = GoldenBrown, // DarkTaupe,
+    onSurfaceVariant = DarkTaupe,
 
     // Контуры
     outline = GoldenBrown, // + рамка текстового поля WarmTaupe,
@@ -49,8 +49,8 @@ val LightColorScheme = lightColorScheme(
     surfaceDim = LightBeige, // Временное соответствие
     surfaceBright = WarmIvory, // Временное соответствие
     surfaceContainerLowest = White, // Временное соответствие
-    surfaceContainerLow = WarmIvory, // Временное соответствие
-    surfaceContainer = WarmIvory, // Временное соответствие
+    surfaceContainerLow = PeachIvory,
+    surfaceContainer = LinenBeige,
     surfaceContainerHigh = CreamBeige, // + Цвет окна Диалога
     surfaceContainerHighest = LightBeige,
 
@@ -88,7 +88,7 @@ val DarkColorScheme = darkColorScheme(
     surface = BlackBrown, // +
     onSurface = RoseWhite, // +
     surfaceVariant = CocoaBrown, // Временное соответствие
-    onSurfaceVariant = LightTan, // PaleTaupe,
+    onSurfaceVariant = PaleTaupe,
 
     // Контуры
     outline = LightTan, // +
@@ -103,8 +103,8 @@ val DarkColorScheme = darkColorScheme(
     surfaceDim = BlackBrown, // Временное соответствие
     surfaceBright = CocoaBrown, // Временное соответствие
     surfaceContainerLowest = NearBlack,
-    surfaceContainerLow = BlackBrown, // Временное соответствие
-    surfaceContainer = CoffeeBrown, // Временное соответствие
+    surfaceContainerLow = DeepBrown,
+    surfaceContainer = EspressoBrown,
     surfaceContainerHigh = CoffeeBrown, // +
     surfaceContainerHighest = CocoaBrown,
 

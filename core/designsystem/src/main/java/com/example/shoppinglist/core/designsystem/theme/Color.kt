@@ -8,8 +8,10 @@ import androidx.compose.ui.graphics.Color
 val White = Color(0xFFFFFFFF)
 val RoseWhite = Color(0xFFFFFAF8) // диалог текст on surfase  (dark)
 val WarmIvory = Color(0xFFFFF8F4) // фон (light)
+val PeachIvory = Color(0xFFFFF1E7)
 
 // Светлые бежевые и персиковые оттенки
+val LinenBeige = Color(0xFFFAEBE0)
 val CreamBeige = Color(0xFFF4E6DA) // диалог surfase container high (light)
 val LightBeige = Color(0xFFEEE0D5)
 val PalePeach = Color(0xFFFFDCBB)
@@ -33,6 +35,7 @@ val MutedBrown = Color(0xFFA78C70) // кнопка cancel - secondary cont (dark
 val DarkTaupe = Color(0xFF50453A) // иконка диалога (light)
 val CocoaBrown = Color(0xFF3B332C)
 val CoffeeBrown = Color(0xFF302921) // диалог surfase container high (dark)
+val EspressoBrown = Color(0xFF251E17)
 val DeepBrown = Color(0xFF211A14) // диалог текст on surfase (light)
 val DarkChocolate = Color(0xFF2B1700)
 val DarkWalnut = Color(0xFF281805) // кнопка cancel- on secondary cont (light)
@@ -43,3 +46,7 @@ val Black = Color(0xFF000000)
 
 // Дополнительные цвета
 val EmeraldGreen = Color(0xFF34C759)
+val LilacGray = Color(0xFFCAC4D0)
+val SlateViolet = Color(0xFF4A4459)
+val MossGreen = Color(0xFF3B4722)
+val Umber = Color(0xFF58432C)

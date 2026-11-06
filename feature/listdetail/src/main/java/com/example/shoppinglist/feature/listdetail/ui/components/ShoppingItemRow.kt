@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,6 +37,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
+import com.example.shoppinglist.core.designsystem.theme.listDivider
+import com.example.shoppinglist.core.designsystem.theme.onSwipeAction
+import com.example.shoppinglist.core.designsystem.theme.swipeActionContainer
 import com.example.shoppinglist.feature.listdetail.R
 import com.example.shoppinglist.feature.listdetail.ui.ItemUnitUi
 import com.example.shoppinglist.feature.listdetail.ui.ShoppingItemUi
@@ -67,7 +71,7 @@ fun ShoppingItemRow(
                 dragHandle = dragHandle,
             )
         }
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        HorizontalDivider(color = MaterialTheme.colorScheme.listDivider)
     }
 }
 
@@ -125,7 +129,13 @@ private fun SwipeAction(
     @StringRes contentDescriptionRes: Int,
     onClick: () -> Unit,
 ) {
-    FilledTonalIconButton(onClick = onClick) {
+    FilledTonalIconButton(
+        onClick = onClick,
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.swipeActionContainer,
+            contentColor = MaterialTheme.colorScheme.onSwipeAction,
+        ),
+    ) {
         Icon(
             painter = painterResource(iconRes),
             contentDescription = stringResource(contentDescriptionRes),

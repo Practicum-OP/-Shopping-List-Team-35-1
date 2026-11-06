@@ -3,7 +3,6 @@ package com.example.shoppinglist.feature.listdetail.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -11,7 +10,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.shoppinglist.core.designsystem.components.DeleteDialog
 import com.example.shoppinglist.core.designsystem.components.Placeholder
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import com.example.shoppinglist.feature.listdetail.R
@@ -198,35 +197,14 @@ private fun ConfirmationDialog(
             R.string.list_detail_clear_purchased_dialog_title to ListDetailEvent.ClearPurchasedConfirmed
     }
 
-    ConfirmDialog(
-        title = stringResource(titleRes),
-        onConfirm = {
+    DeleteDialog(
+        onDelete = {
             onDismiss()
             onEvent(event)
         },
         onDismiss = onDismiss,
-    )
-}
-
-// TODO(#51): replace with core.designsystem DeleteDialog after #51 is merged
-@Composable
-private fun ConfirmDialog(
-    title: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(stringResource(DesignR.string.common_delete))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(DesignR.string.common_cancel))
-            }
-        },
+        dialogTitle = titleRes,
+        contentDescription = null,
+        idItem = null,
     )
 }

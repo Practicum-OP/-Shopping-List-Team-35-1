@@ -88,6 +88,7 @@ private fun DraggableItemRow(
             onDragStart = { dragState.start(item.id) },
             onDrag = { delta -> dragState.offset += delta },
             onDragEnd = onDragEnd,
+            onDragCancel = dragState::reset,
         )
     }
 
@@ -109,10 +110,12 @@ private fun DragHandle(
     onDragStart: () -> Unit,
     onDrag: (Float) -> Unit,
     onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit,
 ) {
     val currentOnDragStart by rememberUpdatedState(onDragStart)
     val currentOnDrag by rememberUpdatedState(onDrag)
     val currentOnDragEnd by rememberUpdatedState(onDragEnd)
+    val currentOnDragCancel by rememberUpdatedState(onDragCancel)
 
     Icon(
         painter = painterResource(DesignR.drawable.ic_drag_handle),
@@ -121,7 +124,7 @@ private fun DragHandle(
             detectDragGestures(
                 onDragStart = { currentOnDragStart() },
                 onDragEnd = { currentOnDragEnd() },
-                onDragCancel = { currentOnDragEnd() },
+                onDragCancel = { currentOnDragCancel() },
                 onDrag = { change, amount ->
                     change.consume()
                     currentOnDrag(amount.y)

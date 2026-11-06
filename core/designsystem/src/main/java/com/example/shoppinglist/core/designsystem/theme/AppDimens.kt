@@ -37,6 +37,7 @@ object AppDimens {
     val dialogCornerRadius = 28.dp
     val bottomSheetCornerRadius = 28.dp
     val bottomSheetSideMargin = 6.dp
+    val itemFormCompactWidth = 340.dp
 
     // Иллюстрация пустого состояния
     val emptyStateImageWidth = 324.dp

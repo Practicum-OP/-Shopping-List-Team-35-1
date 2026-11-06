@@ -102,7 +102,6 @@ private fun ItemFormUnitPickerPreview() {
     )
 }
 
-// Окно панели на статичном превью не рисуется, поэтому показывается её содержимое.
 @Composable
 private fun ItemFormPreviewContainer(form: ItemFormState) {
     ShoppingListTheme {

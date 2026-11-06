@@ -8,10 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.example.shoppinglist.feature.listdetail.R
 
-/**
- * Пока нет ViewModel, State хранится здесь: экран можно открыть и проверить вручную,
- * но товары не сохраняются, а подтверждения удаления ничего не меняют.
- */
 @Composable
 fun ListDetailRoute(
     onBackToLists: () -> Unit,

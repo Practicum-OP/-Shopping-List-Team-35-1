@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -71,10 +73,7 @@ internal fun ItemFormFields(
                 onEvent = onEvent,
                 modifier = Modifier.onSizeChanged { nameFieldHeight = it.height },
             )
-            QuantityRow(form = form, onEvent = onEvent)
-            if (form.unitPickerVisible) {
-                UnitPicker(onUnitSelected = { onEvent(ListDetailEvent.UnitSelected(it)) })
-            }
+            QuantitySection(form = form, onEvent = onEvent)
         }
         if (form.suggestions.isNotEmpty()) {
             SuggestionsList(
@@ -108,74 +107,128 @@ private fun NameField(
 }
 
 @Composable
-private fun QuantityRow(
+private fun QuantitySection(
     form: ItemFormState,
     onEvent: (ListDetailEvent) -> Unit,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
-        OutlinedTextField(
-            value = form.quantity,
-            onValueChange = { onEvent(ListDetailEvent.QuantityChanged(it)) },
-            modifier = Modifier.weight(1f),
-            label = { FieldLabel(R.string.list_detail_quantity_label) },
-            supportingText = form.quantityError?.let { error -> { Text(text = error) } },
-            isError = form.quantityError != null,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true,
-            colors = itemFormFieldColors(),
-        )
-        UnitField(
-            unitKey = form.unit,
-            isPickerVisible = form.unitPickerVisible,
-            onClick = {
-                onEvent(
-                    if (form.unitPickerVisible) {
-                        ListDetailEvent.UnitPickerClosed
-                    } else {
-                        ListDetailEvent.UnitPickerOpened
-                    },
-                )
-            },
-            modifier = Modifier.weight(1f),
-        )
-        QuantityButton(
-            iconRes = DesignR.drawable.ic_remove,
-            contentDescriptionRes = R.string.list_detail_quantity_decrease,
-            enabled = form.quantity.isNotBlank(),
-            onClick = { onEvent(ListDetailEvent.QuantityDecreased) },
-        )
-        QuantityButton(
-            iconRes = DesignR.drawable.ic_add,
-            contentDescriptionRes = R.string.list_detail_quantity_increase,
-            onClick = { onEvent(ListDetailEvent.QuantityIncreased) },
-        )
+    BoxWithConstraints {
+        if (maxWidth < AppDimens.itemFormCompactWidth) {
+            CompactQuantitySection(form = form, onEvent = onEvent)
+        } else {
+            RegularQuantitySection(form = form, onEvent = onEvent)
+        }
     }
+}
+
+@Composable
+private fun RegularQuantitySection(
+    form: ItemFormState,
+    onEvent: (ListDetailEvent) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
+            QuantityField(form = form, onEvent = onEvent, modifier = Modifier.weight(1f))
+            UnitField(form = form, onEvent = onEvent, modifier = Modifier.weight(1f))
+            QuantityButtons(form = form, onEvent = onEvent)
+        }
+        if (form.unitPickerVisible) {
+            Row(horizontalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
+                Spacer(modifier = Modifier.weight(1f))
+                UnitPicker(onEvent = onEvent, modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(AppDimens.iconButtonSize * 2 + AppDimens.spacingSmall))
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactQuantitySection(
+    form: ItemFormState,
+    onEvent: (ListDetailEvent) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
+            QuantityField(form = form, onEvent = onEvent, modifier = Modifier.weight(1f))
+            QuantityButtons(form = form, onEvent = onEvent)
+        }
+        UnitField(form = form, onEvent = onEvent, modifier = Modifier.fillMaxWidth())
+        if (form.unitPickerVisible) {
+            UnitPicker(onEvent = onEvent, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+private fun QuantityField(
+    form: ItemFormState,
+    onEvent: (ListDetailEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = form.quantity,
+        onValueChange = { onEvent(ListDetailEvent.QuantityChanged(it)) },
+        modifier = modifier,
+        label = { FieldLabel(R.string.list_detail_quantity_label) },
+        supportingText = form.quantityError?.let { error -> { Text(text = error) } },
+        isError = form.quantityError != null,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        singleLine = true,
+        colors = itemFormFieldColors(),
+    )
+}
+
+@Composable
+private fun QuantityButtons(
+    form: ItemFormState,
+    onEvent: (ListDetailEvent) -> Unit,
+) {
+    QuantityButton(
+        iconRes = DesignR.drawable.ic_remove,
+        contentDescriptionRes = R.string.list_detail_quantity_decrease,
+        enabled = form.quantity.isNotBlank(),
+        onClick = { onEvent(ListDetailEvent.QuantityDecreased) },
+    )
+    QuantityButton(
+        iconRes = DesignR.drawable.ic_add,
+        contentDescriptionRes = R.string.list_detail_quantity_increase,
+        onClick = { onEvent(ListDetailEvent.QuantityIncreased) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UnitField(
-    unitKey: String?,
-    isPickerVisible: Boolean,
-    onClick: () -> Unit,
+    form: ItemFormState,
+    onEvent: (ListDetailEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val unitLabel = ItemUnitUi.fromKey(unitKey)?.let { stringResource(it.labelRes) }.orEmpty()
+    val unitLabel = ItemUnitUi.fromKey(form.unit)?.let { stringResource(it.labelRes) }.orEmpty()
+    val toggleEvent = if (form.unitPickerVisible) {
+        ListDetailEvent.UnitPickerClosed
+    } else {
+        ListDetailEvent.UnitPickerOpened
+    }
 
     Box(modifier = modifier) {
         OutlinedTextField(
             value = unitLabel,
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             readOnly = true,
             label = { FieldLabel(R.string.list_detail_unit_label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isPickerVisible) },
             singleLine = true,
             colors = itemFormFieldColors(),
         )
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .clickable(onClick = onClick),
+                .clickable { onEvent(toggleEvent) },
+        )
+        ExposedDropdownMenuDefaults.TrailingIcon(
+            expanded = form.unitPickerVisible,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(top = AppDimens.spacingSmall, end = AppDimens.spacingSmall),
         )
     }
 }
@@ -202,34 +255,31 @@ private fun QuantityButton(
 
 @Composable
 private fun UnitPicker(
-    onUnitSelected: (String) -> Unit,
+    onEvent: (ListDetailEvent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(AppDimens.spacingSmall)) {
-        Spacer(modifier = Modifier.weight(1f))
-        Surface(
-            modifier = Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.surfaceContainer,
-            shadowElevation = AppDimens.spacingExtraSmall,
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        shadowElevation = AppDimens.spacingExtraSmall,
+    ) {
+        Column(
+            modifier = Modifier
+                .heightIn(max = AppDimens.listItemMinHeight * VISIBLE_UNIT_ROWS)
+                .verticalScroll(rememberScrollState()),
         ) {
-            Column(
-                modifier = Modifier
-                    .heightIn(max = AppDimens.listItemMinHeight * VISIBLE_UNIT_ROWS)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                ItemUnitUi.entries.forEach { unit ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(unit.labelRes),
-                                style = MaterialTheme.typography.bodyLarge,
-                            )
-                        },
-                        onClick = { onUnitSelected(unit.key) },
-                    )
-                }
+            ItemUnitUi.entries.forEach { unit ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(unit.labelRes),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    },
+                    onClick = { onEvent(ListDetailEvent.UnitSelected(unit.key)) },
+                )
             }
         }
-        Spacer(modifier = Modifier.width(AppDimens.iconButtonSize * 2 + AppDimens.spacingSmall))
     }
 }
 
@@ -266,6 +316,7 @@ private fun itemFormFieldColors(): TextFieldColors = OutlinedTextFieldDefaults.c
 private fun FieldLabel(@StringRes textRes: Int) {
     Text(
         text = stringResource(textRes),
+        style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )

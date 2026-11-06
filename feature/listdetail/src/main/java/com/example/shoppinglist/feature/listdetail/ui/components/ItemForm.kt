@@ -35,9 +35,6 @@ import com.example.shoppinglist.feature.listdetail.ui.ItemFormState
 import com.example.shoppinglist.feature.listdetail.ui.ListDetailEvent
 import com.example.shoppinglist.core.designsystem.R as DesignR
 
-/**
- * Панель с прозрачным контейнером: кнопка сохранения висит над формой и двигается вместе с ней.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemForm(

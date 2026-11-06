@@ -27,12 +27,18 @@ import com.example.shoppinglist.core.designsystem.components.EmailTextField
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
 import com.example.shoppinglist.feature.auth.R
 import com.example.shoppinglist.core.designsystem.R as DesignSystemR
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecoveryScreen(
     state: RecoveryState,
     onEvent: (RecoveryEvent) -> Unit,
+    snackbarHostState: SnackbarHostState = remember {
+        SnackbarHostState()
+    },
 ) {
     Scaffold(
         topBar = {
@@ -48,6 +54,11 @@ fun RecoveryScreen(
                         )
                     }
                 },
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
             )
         },
     ) { innerPadding ->

@@ -1,6 +1,7 @@
 package com.example.shoppinglist
 
 import android.app.Application
+import com.example.shoppinglist.core.data.di.authSessionModule
 import com.example.shoppinglist.core.data.di.dataModule
 import com.example.shoppinglist.core.data.di.networkModule
 import com.example.shoppinglist.core.domain.di.domainModule
@@ -26,6 +27,7 @@ class ShoppingApplication : Application() {
                 networkModule,
                 introModule,
                 authModule,
+                authSessionModule,
                 listDetailModule,
                 listsModule,
             )

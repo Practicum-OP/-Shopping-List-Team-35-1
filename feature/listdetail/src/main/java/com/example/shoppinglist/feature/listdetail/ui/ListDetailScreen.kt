@@ -203,7 +203,7 @@ private fun ConfirmationDialog(
             onEvent(event)
         },
         onDismiss = onDismiss,
-        dialogTitle = titleRes,
+        dialogTitle = stringResource(titleRes),
         contentDescription = null,
         idItem = null,
     )

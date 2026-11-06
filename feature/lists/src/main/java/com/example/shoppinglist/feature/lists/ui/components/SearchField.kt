@@ -1,13 +1,14 @@
 package com.example.shoppinglist.feature.lists.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,85 +33,98 @@ fun SearchField(
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(SearchFieldHeight),
-        color = MaterialTheme.colorScheme.surface,
+    Column(
+        modifier = modifier.fillMaxWidth(),
     ) {
-        Row(
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = AppDimens.screenHorizontalPadding,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
+                .height(SearchFieldHeight),
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
         ) {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier.size(AppDimens.iconButtonSize),
-            ) {
-                Icon(
-                    painter = painterResource(
-                        R.drawable.ic_back_arrow,
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = AppDimens.screenHorizontalPadding,
                     ),
-                    contentDescription = "Назад",
-                    modifier = Modifier.size(AppDimens.iconSize),
-                    tint = MaterialTheme.colorScheme.secondary,
-                )
-            }
-
-            BasicTextField(
-                value = query,
-                onValueChange = onQueryChange,
-                modifier = Modifier.weight(1f),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-                singleLine = true,
-                decorationBox = { innerTextField ->
-                    Box(
-                        contentAlignment = Alignment.CenterStart,
-                    ) {
-                        if (query.isEmpty()) {
-                            Text(
-                                text = stringResource(
-                                    R.string.lists_search_hint,
-                                ),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.secondary,
-                            )
-                        }
-
-                        innerTextField()
-                    }
-                },
-            )
-
-            if (query.isNotEmpty()) {
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 IconButton(
-                    onClick = onClearClick,
-                    modifier = Modifier.size(AppDimens.iconButtonSize),
+                    onClick = onBackClick,
+                    modifier = Modifier.size(
+                        AppDimens.iconButtonSize,
+                    ),
                 ) {
                     Icon(
                         painter = painterResource(
-                            R.drawable.ic_close,
+                            R.drawable.ic_back_arrow,
                         ),
-                        contentDescription = "Очистить поиск",
-                        modifier = Modifier.size(AppDimens.iconSize),
+                        contentDescription = stringResource(
+                            R.string.lists_back,
+                        ),
+                        modifier = Modifier.size(
+                            AppDimens.iconSize,
+                        ),
                         tint = MaterialTheme.colorScheme.secondary,
                     )
                 }
+
+                BasicTextField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    modifier = Modifier.weight(1f),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
+                    singleLine = true,
+                    decorationBox = { innerTextField ->
+                        Box(
+                            contentAlignment = Alignment.CenterStart,
+                        ) {
+                            if (query.isEmpty()) {
+                                Text(
+                                    text = stringResource(
+                                        R.string.lists_search_hint,
+                                    ),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                )
+                            }
+
+                            innerTextField()
+                        }
+                    },
+                )
+
+                if (query.isNotEmpty()) {
+                    IconButton(
+                        onClick = onClearClick,
+                        modifier = Modifier.size(
+                            AppDimens.iconButtonSize,
+                        ),
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                R.drawable.ic_close,
+                            ),
+                            contentDescription = stringResource(
+                                R.string.lists_clear_search,
+                            ),
+                            modifier = Modifier.size(
+                                AppDimens.iconSize,
+                            ),
+                            tint = MaterialTheme.colorScheme.secondary,
+                        )
+                    }
+                }
             }
         }
-    }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(AppDimens.dividerThickness)
-            .background(
-                MaterialTheme.colorScheme.outlineVariant,
-            ),
-    )
+        HorizontalDivider(
+            modifier = Modifier.fillMaxWidth(),
+            thickness = AppDimens.dividerThickness,
+            color = MaterialTheme.colorScheme.outlineVariant,
+        )
+    }
 }

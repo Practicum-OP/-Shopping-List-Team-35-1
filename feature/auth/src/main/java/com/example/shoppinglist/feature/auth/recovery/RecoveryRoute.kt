@@ -1,35 +1,56 @@
 package com.example.shoppinglist.feature.auth.recovery
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import com.example.shoppinglist.feature.auth.model.AuthValidator
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalResources
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.shoppinglist.feature.auth.model.CollectAuthEffects
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-/**
- * Пока нет ViewModel (Эпик 3), State хранится здесь: поле ввода и проверка работают,
- * а кнопка отправки сразу возвращает на авторизацию, без запроса к API.
- */
 @Composable
 fun RecoveryRoute(
     onBack: () -> Unit,
     onRestorePassword: () -> Unit,
+    viewModel: RecoveryViewModel = koinViewModel(),
 ) {
-    var state by rememberSaveable { mutableStateOf(RecoveryState()) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val resources = LocalResources.current
+
+    CollectAuthEffects(
+        effects = viewModel.effects,
+    ) { effect ->
+        when (effect) {
+            RecoveryEffect.RecoveryCompleted -> {
+                onRestorePassword()
+            }
+
+            RecoveryEffect.NavigateBack -> {
+                onBack()
+            }
+
+            is RecoveryEffect.ShowMessage -> {
+                launch {
+                    snackbarHostState.showSnackbar(
+                        message = resources.getString(
+                            effect.messageRes,
+                        ),
+                    )
+                }
+            }
+        }
+    }
 
     RecoveryScreen(
         state = state,
-        onEvent = { event ->
-            when (event) {
-                is RecoveryEvent.EmailChanged -> state = state.copy(
-                    email = event.email,
-                    emailError = AuthValidator.validateEmail(event.email),
-                )
-
-                RecoveryEvent.SendClicked -> if (state.isSendEnabled) onRestorePassword()
-                RecoveryEvent.BackClicked -> onBack()
-            }
-        },
+        onEvent = viewModel::onEvent,
+        snackbarHostState = snackbarHostState,
     )
 }

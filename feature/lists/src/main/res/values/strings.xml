@@ -21,12 +21,13 @@
     <string name="lists_rename">Переименовать</string>
     <string name="lists_cancel">Отмена</string>
     <string name="lists_create">Создать</string>
+    <string name="lists_delete">Удалить</string>
 
     <!-- Копирование списка -->
     <string name="lists_copy_name">%1$s (Копия)</string>
 
     <!-- Подтверждения удаления -->
-    <string name="lists_delete_dialog_title">Удалить список</string>
+    <string name="lists_delete_dialog_title">Удалить список \"%1$s\" ?</string>
     <string name="lists_delete_all_dialog_title">Удалить все списки?</string>
 
     <!-- contentDescription -->
@@ -37,4 +38,11 @@
     <string name="lists_change_icon">Сменить иконку списка</string>
     <string name="lists_empty_image_description">Девушка со списком покупок</string>
     <string name="lists_not_found_image_description">Девушка разводит руками</string>
+    <string name="lists_edit_list">Редактировать список</string>
+    <string name="lists_copy_list">Копировать список</string>
+    <string name="lists_delete_list">Удалить список</string>
+    <string name="lists_back">Назад</string>
+    <string name="lists_clear_search">Очистить поиск</string>
+
+    <string name="lists_icon_picker_item">Иконка %1$d</string>
 </resources>

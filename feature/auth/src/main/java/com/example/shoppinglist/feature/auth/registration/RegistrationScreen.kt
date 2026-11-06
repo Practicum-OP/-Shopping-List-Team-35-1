@@ -15,9 +15,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,26 +37,47 @@ import com.example.shoppinglist.core.designsystem.R as DesignSystemR
 fun RegistrationScreen(
     state: RegistrationState,
     onEvent: (RegistrationEvent) -> Unit,
+    snackbarHostState: SnackbarHostState = remember {
+        SnackbarHostState()
+    },
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.auth_registration_title))
+                    Text(
+                        text = stringResource(
+                            R.string.auth_registration_title,
+                        ),
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(RegistrationEvent.BackClicked) }) {
+                    IconButton(
+                        onClick = {
+                            onEvent(
+                                RegistrationEvent.BackClicked,
+                            )
+                        },
+                        enabled = !state.isLoading,
+                    ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(DesignSystemR.string.common_back),
+                            imageVector =
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(
+                                DesignSystemR.string.common_back,
+                            ),
                         )
                     }
                 },
             )
         },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.imePadding(),
+            )
+        },
     ) { innerPadding ->
-        // Прокрутка нужна в горизонтальной ориентации и на маленьких экранах:
-        // если форма помещается, она остаётся по центру.
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,7 +97,11 @@ fun RegistrationScreen(
         ) {
             EmailTextField(
                 value = state.email,
-                onValueChange = { onEvent(RegistrationEvent.EmailChanged(it)) },
+                onValueChange = { email ->
+                    onEvent(
+                        RegistrationEvent.EmailChanged(email),
+                    )
+                },
                 labelRes = R.string.auth_email_label,
                 errorRes = state.emailError?.messageRes,
                 enabled = !state.isLoading,
@@ -81,10 +109,18 @@ fun RegistrationScreen(
 
             PasswordTextField(
                 value = state.password,
-                onValueChange = { onEvent(RegistrationEvent.PasswordChanged(it)) },
+                onValueChange = { password ->
+                    onEvent(
+                        RegistrationEvent.PasswordChanged(password),
+                    )
+                },
                 labelRes = R.string.auth_password_label,
                 isPasswordVisible = state.isPasswordVisible,
-                onVisibilityToggle = { onEvent(RegistrationEvent.PasswordVisibilityToggled) },
+                onVisibilityToggle = {
+                    onEvent(
+                        RegistrationEvent.PasswordVisibilityToggled,
+                    )
+                },
                 errorRes = state.passwordError?.messageRes,
                 enabled = !state.isLoading,
                 imeAction = ImeAction.Next,
@@ -92,20 +128,38 @@ fun RegistrationScreen(
 
             PasswordTextField(
                 value = state.passwordRepeat,
-                onValueChange = { onEvent(RegistrationEvent.PasswordRepeatChanged(it)) },
+                onValueChange = { passwordRepeat ->
+                    onEvent(
+                        RegistrationEvent.PasswordRepeatChanged(
+                            passwordRepeat,
+                        ),
+                    )
+                },
                 labelRes = R.string.auth_password_repeat_label,
                 isPasswordVisible = state.isPasswordRepeatVisible,
-                onVisibilityToggle = { onEvent(RegistrationEvent.PasswordRepeatVisibilityToggled) },
+                onVisibilityToggle = {
+                    onEvent(
+                        RegistrationEvent.PasswordRepeatVisibilityToggled,
+                    )
+                },
                 errorRes = state.passwordRepeatError?.messageRes,
                 enabled = !state.isLoading,
                 keyboardActions = KeyboardActions(
-                    onDone = { onEvent(RegistrationEvent.RegistrationClicked) },
+                    onDone = {
+                        onEvent(
+                            RegistrationEvent.RegistrationClicked,
+                        )
+                    },
                 ),
             )
 
             ActionButton(
                 textRes = R.string.auth_registration_button,
-                onClick = { onEvent(RegistrationEvent.RegistrationClicked) },
+                onClick = {
+                    onEvent(
+                        RegistrationEvent.RegistrationClicked,
+                    )
+                },
                 enabled = state.isRegistrationEnabled,
                 isLoading = state.isLoading,
             )

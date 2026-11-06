@@ -1,46 +1,61 @@
 package com.example.shoppinglist.feature.auth.login
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import com.example.shoppinglist.feature.auth.model.AuthValidator
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalResources
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.shoppinglist.feature.auth.model.CollectAuthEffects
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-/**
- * Пока нет ViewModel (Эпик 3), State хранится здесь: поля ввода и проверки работают,
- * а «Войти» ведёт сразу на экран списков, без запроса к API.
- */
 @Composable
 fun LoginRoute(
     onOpenRegistration: () -> Unit,
     onOpenRecovery: () -> Unit,
     onOpenLists: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
-    var state by rememberSaveable { mutableStateOf(LoginState()) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    val resources = LocalResources.current
+
+    CollectAuthEffects(
+        effects = viewModel.effects,
+    ) { effect ->
+        when (effect) {
+            LoginEffect.OpenLists -> {
+                onOpenLists()
+            }
+
+            LoginEffect.OpenRegistration -> {
+                onOpenRegistration()
+            }
+
+            LoginEffect.OpenRecovery -> {
+                onOpenRecovery()
+            }
+
+            is LoginEffect.ShowMessage -> {
+                launch {
+                    snackbarHostState.showSnackbar(
+                        message = resources.getString(
+                            effect.messageRes,
+                        ),
+                    )
+                }
+            }
+        }
+    }
 
     LoginScreen(
         state = state,
-        onEvent = { event ->
-            when (event) {
-                is LoginEvent.EmailChanged -> state = state.copy(
-                    email = event.email,
-                    emailError = AuthValidator.validateEmail(event.email),
-                )
-
-                is LoginEvent.PasswordChanged -> state = state.copy(
-                    password = event.password,
-                    passwordError = AuthValidator.validatePassword(event.password),
-                )
-
-                LoginEvent.PasswordVisibilityToggled -> state = state.copy(
-                    isPasswordVisible = !state.isPasswordVisible,
-                )
-
-                LoginEvent.LoginClicked -> if (state.isLoginEnabled) onOpenLists()
-                LoginEvent.RegistrationClicked -> onOpenRegistration()
-                LoginEvent.RecoveryClicked -> onOpenRecovery()
-            }
-        },
+        onEvent = viewModel::onEvent,
+        snackbarHostState = snackbarHostState,
     )
 }

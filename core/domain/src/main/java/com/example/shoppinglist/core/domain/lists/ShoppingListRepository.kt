@@ -33,6 +33,6 @@ interface ShoppingListRepository {
     )
 
     companion object {
-        const val DEFAULT_ICON_KEY = "cart"
+        const val DEFAULT_ICON_KEY = "list"
     }
 }

@@ -13,9 +13,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,18 +33,29 @@ import com.example.shoppinglist.feature.auth.R
 fun LoginScreen(
     state: LoginState,
     onEvent: (LoginEvent) -> Unit,
+    snackbarHostState: SnackbarHostState = remember {
+        SnackbarHostState()
+    },
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.auth_login_title))
+                    Text(
+                        text = stringResource(
+                            R.string.auth_login_title,
+                        ),
+                    )
                 },
             )
         },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.imePadding(),
+            )
+        },
     ) { innerPadding ->
-        // Прокрутка нужна в горизонтальной ориентации и на маленьких экранах:
-        // если форма помещается, она остаётся по центру.
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -61,7 +75,11 @@ fun LoginScreen(
         ) {
             EmailTextField(
                 value = state.email,
-                onValueChange = { onEvent(LoginEvent.EmailChanged(it)) },
+                onValueChange = { email ->
+                    onEvent(
+                        LoginEvent.EmailChanged(email),
+                    )
+                },
                 labelRes = R.string.auth_email_label,
                 errorRes = state.emailError?.messageRes,
                 enabled = !state.isLoading,
@@ -69,38 +87,70 @@ fun LoginScreen(
 
             PasswordTextField(
                 value = state.password,
-                onValueChange = { onEvent(LoginEvent.PasswordChanged(it)) },
+                onValueChange = { password ->
+                    onEvent(
+                        LoginEvent.PasswordChanged(password),
+                    )
+                },
                 labelRes = R.string.auth_password_label,
                 isPasswordVisible = state.isPasswordVisible,
-                onVisibilityToggle = { onEvent(LoginEvent.PasswordVisibilityToggled) },
+                onVisibilityToggle = {
+                    onEvent(
+                        LoginEvent.PasswordVisibilityToggled,
+                    )
+                },
                 errorRes = state.passwordError?.messageRes,
                 enabled = !state.isLoading,
                 keyboardActions = KeyboardActions(
-                    onDone = { onEvent(LoginEvent.LoginClicked) },
+                    onDone = {
+                        onEvent(
+                            LoginEvent.LoginClicked,
+                        )
+                    },
                 ),
             )
 
             ActionButton(
                 textRes = R.string.auth_login_button,
-                onClick = { onEvent(LoginEvent.LoginClicked) },
+                onClick = {
+                    onEvent(
+                        LoginEvent.LoginClicked,
+                    )
+                },
                 enabled = state.isLoginEnabled,
                 isLoading = state.isLoading,
             )
 
             OutlinedButton(
-                onClick = { onEvent(LoginEvent.RegistrationClicked) },
+                onClick = {
+                    onEvent(
+                        LoginEvent.RegistrationClicked,
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading,
             ) {
-                Text(text = stringResource(R.string.auth_registration_button))
+                Text(
+                    text = stringResource(
+                        R.string.auth_registration_button,
+                    ),
+                )
             }
 
             OutlinedButton(
-                onClick = { onEvent(LoginEvent.RecoveryClicked) },
+                onClick = {
+                    onEvent(
+                        LoginEvent.RecoveryClicked,
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading,
             ) {
-                Text(text = stringResource(R.string.auth_recovery_button))
+                Text(
+                    text = stringResource(
+                        R.string.auth_recovery_button,
+                    ),
+                )
             }
         }
     }

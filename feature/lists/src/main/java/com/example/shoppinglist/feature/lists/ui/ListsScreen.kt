@@ -2,14 +2,13 @@ package com.example.shoppinglist.feature.lists.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,18 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.example.shoppinglist.core.designsystem.components.DeleteDialog
 import com.example.shoppinglist.core.designsystem.components.Placeholder
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
 import com.example.shoppinglist.core.domain.lists.ShoppingList
 import com.example.shoppinglist.core.domain.settings.ThemeMode
 import com.example.shoppinglist.feature.lists.R
 import com.example.shoppinglist.feature.lists.ui.components.CreateDialog
-import com.example.shoppinglist.feature.lists.ui.components.ListItemAction
+import com.example.shoppinglist.feature.lists.ui.components.ListIconPickerBottomSheet
 import com.example.shoppinglist.feature.lists.ui.components.RenameDialog
 import com.example.shoppinglist.feature.lists.ui.components.SearchField
 import com.example.shoppinglist.feature.lists.ui.components.ShoppingListItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsScreen(
     state: ListsState,
@@ -71,6 +69,10 @@ fun ListsScreen(
         mutableStateOf("")
     }
 
+    var iconPickerListId by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+
     val isSystemDark = isSystemInDarkTheme()
 
     val isDarkTheme = when (state.themeMode) {
@@ -84,71 +86,24 @@ fun ListsScreen(
         topBar = {
             when (val topContent = state.topContent) {
                 TopContent.AppBar -> {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(
-                                    R.string.lists_title,
-                                ),
-                                style = MaterialTheme.typography.titleLarge,
-                            )
+                    ListsTopAppBar(
+                        isDarkTheme = isDarkTheme,
+                        onSearchClick = {
+                            onEvent(ListsEvent.SearchOpened)
                         },
-                        actions = {
-                            IconButton(
-                                onClick = {
-                                    onEvent(ListsEvent.SearchOpened)
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(
-                                        R.drawable.ic_search,
-                                    ),
-                                    contentDescription = "Поиск",
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                )
-                            }
-
-                            IconButton(
-                                onClick = {
-                                    showDeleteAllDialog = true
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(
-                                        R.drawable.ic_delete,
-                                    ),
-                                    contentDescription = "Удалить все списки",
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                )
-                            }
-
-                            IconButton(
-                                onClick = {
-                                    onEvent(
-                                        ListsEvent.ThemeModeChanged(
-                                            mode = if (isDarkTheme) {
-                                                ThemeMode.LIGHT
-                                            } else {
-                                                ThemeMode.DARK
-                                            },
-                                        ),
-                                    )
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(
-                                        if (isDarkTheme) {
-                                            R.drawable.ic_day_theme
-                                        } else {
-                                            R.drawable.ic_night_theme
-                                        },
-                                    ),
-                                    contentDescription = stringResource(
-                                        R.string.lists_toggle_theme,
-                                    ),
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                )
-                            }
+                        onDeleteAllClick = {
+                            showDeleteAllDialog = true
+                        },
+                        onThemeClick = {
+                            onEvent(
+                                ListsEvent.ThemeModeChanged(
+                                    mode = if (isDarkTheme) {
+                                        ThemeMode.LIGHT
+                                    } else {
+                                        ThemeMode.DARK
+                                    },
+                                ),
+                            )
                         },
                     )
                 }
@@ -178,10 +133,10 @@ fun ListsScreen(
                 },
             ) {
                 Icon(
-                    painter = painterResource(
-                        R.drawable.ic_add,
+                    painter = painterResource(R.drawable.ic_add),
+                    contentDescription = stringResource(
+                        R.string.lists_add,
                     ),
-                    contentDescription = "Добавить список",
                 )
             }
         },
@@ -197,6 +152,9 @@ fun ListsScreen(
                 deleteListId = list.id
                 deleteListName = list.name
             },
+            onListIconClick = { list ->
+                iconPickerListId = list.id
+            },
             innerPadding = innerPadding,
         )
     }
@@ -207,6 +165,7 @@ fun ListsScreen(
                 onEvent(
                     ListsEvent.CreateListConfirmed(name),
                 )
+
                 showCreateDialog = false
             },
             onDismiss = {
@@ -242,14 +201,15 @@ fun ListsScreen(
     val currentDeleteListId = deleteListId
 
     if (currentDeleteListId != null) {
-        ConfirmDeleteDialog(
-            title = "Удалить список «$deleteListName»?",
-            onDelete = {
-                onEvent(
-                    ListsEvent.DeleteListConfirmed(
-                        listId = currentDeleteListId,
-                    ),
-                )
+        DeleteDialog(
+            onDelete = { listId ->
+                if (listId != null) {
+                    onEvent(
+                        ListsEvent.DeleteListConfirmed(
+                            listId = listId,
+                        ),
+                    )
+                }
 
                 deleteListId = null
                 deleteListName = ""
@@ -258,23 +218,112 @@ fun ListsScreen(
                 deleteListId = null
                 deleteListName = ""
             },
+            dialogTitle = stringResource(
+                R.string.lists_delete_dialog_title,
+                deleteListName,
+            ),
+            contentDescription = null,
+            idItem = currentDeleteListId,
         )
     }
 
     if (showDeleteAllDialog) {
-        ConfirmDeleteDialog(
-            title = "Удалить все списки?",
-            onDelete = {
-                onEvent(
-                    ListsEvent.DeleteAllListsConfirmed,
-                )
+        DeleteDialog(
+            onDelete = { _ ->
+                onEvent(ListsEvent.DeleteAllListsConfirmed)
                 showDeleteAllDialog = false
             },
             onDismiss = {
                 showDeleteAllDialog = false
             },
+            dialogTitle = stringResource(
+                R.string.lists_delete_all_dialog_title,
+            ),
+            contentDescription = null,
+            idItem = null,
         )
     }
+
+    val currentIconPickerListId = iconPickerListId
+
+    if (currentIconPickerListId != null) {
+        ListIconPickerBottomSheet(
+            onIconSelected = { iconKey ->
+                onEvent(
+                    ListsEvent.ListIconSelected(
+                        listId = currentIconPickerListId,
+                        iconKey = iconKey,
+                    ),
+                )
+
+                iconPickerListId = null
+            },
+            onDismiss = {
+                iconPickerListId = null
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ListsTopAppBar(
+    isDarkTheme: Boolean,
+    onSearchClick: () -> Unit,
+    onDeleteAllClick: () -> Unit,
+    onThemeClick: () -> Unit,
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.lists_title),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        actions = {
+            IconButton(
+                onClick = onSearchClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_search),
+                    contentDescription = stringResource(
+                        R.string.lists_search,
+                    ),
+                    tint = MaterialTheme.colorScheme.secondary,
+                )
+            }
+
+            IconButton(
+                onClick = onDeleteAllClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_delete),
+                    contentDescription = stringResource(
+                        R.string.lists_delete_all,
+                    ),
+                    tint = MaterialTheme.colorScheme.secondary,
+                )
+            }
+
+            IconButton(
+                onClick = onThemeClick,
+            ) {
+                Icon(
+                    painter = painterResource(
+                        if (isDarkTheme) {
+                            R.drawable.ic_day_theme
+                        } else {
+                            R.drawable.ic_night_theme
+                        },
+                    ),
+                    contentDescription = stringResource(
+                        R.string.lists_toggle_theme,
+                    ),
+                    tint = MaterialTheme.colorScheme.secondary,
+                )
+            }
+        },
+    )
 }
 
 @Composable
@@ -283,9 +332,11 @@ private fun ListsContent(
     onEvent: (ListsEvent) -> Unit,
     onRenameClick: (ShoppingList) -> Unit,
     onDeleteClick: (ShoppingList) -> Unit,
+    onListIconClick: (ShoppingList) -> Unit,
     innerPadding: PaddingValues,
 ) {
     val isSearchOpened = state.topContent is TopContent.SearchField
+
     val isSearchEmpty = (
         state.topContent as? TopContent.SearchField
         )?.searchQuery?.isBlank() == true
@@ -301,7 +352,7 @@ private fun ListsContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    androidx.compose.material3.CircularProgressIndicator()
+                    CircularProgressIndicator()
                 }
             }
 
@@ -310,7 +361,8 @@ private fun ListsContent(
                     imageRes = R.drawable.illustration_shopping_lists,
                     titleRes = R.string.lists_empty_title,
                     descriptionRes = R.string.lists_empty_description,
-                    contentDescriptionRes = R.string.lists_empty_image_description,
+                    contentDescriptionRes =
+                    R.string.lists_empty_image_description,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -319,8 +371,10 @@ private fun ListsContent(
                 Placeholder(
                     imageRes = R.drawable.illustration_search_screen,
                     titleRes = R.string.lists_search_not_found_title,
-                    descriptionRes = R.string.lists_search_not_found_description,
-                    contentDescriptionRes = R.string.lists_not_found_image_description,
+                    descriptionRes =
+                    R.string.lists_search_not_found_description,
+                    contentDescriptionRes =
+                    R.string.lists_not_found_image_description,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -331,6 +385,7 @@ private fun ListsContent(
                     onEvent = onEvent,
                     onRenameClick = onRenameClick,
                     onDeleteClick = onDeleteClick,
+                    onListIconClick = onListIconClick,
                 )
             }
 
@@ -340,6 +395,7 @@ private fun ListsContent(
                     onEvent = onEvent,
                     onRenameClick = onRenameClick,
                     onDeleteClick = onDeleteClick,
+                    onListIconClick = onListIconClick,
                 )
             }
         }
@@ -362,15 +418,13 @@ private fun ShoppingLists(
     onEvent: (ListsEvent) -> Unit,
     onRenameClick: (ShoppingList) -> Unit,
     onDeleteClick: (ShoppingList) -> Unit,
+    onListIconClick: (ShoppingList) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             horizontal = AppDimens.screenHorizontalPadding,
             vertical = AppDimens.spacingMedium,
-        ),
-        verticalArrangement = Arrangement.spacedBy(
-            AppDimens.spacingMedium,
         ),
     ) {
         items(
@@ -384,40 +438,25 @@ private fun ShoppingLists(
                 listIconId = ListIconCatalog.drawableRes(
                     list.iconKey,
                 ),
-                listIconContentDescription = "Иконка списка",
-                actions = listOf(
-                    ListItemAction(
-                        iconId = com.example.shoppinglist.core.designsystem.R.drawable.ic_edit,
-                        contentDescription = "Редактировать список",
-                        onClick = {
-                            onRenameClick(list)
-                        },
-                    ),
-                    ListItemAction(
-                        iconId = com.example.shoppinglist.core.designsystem.R.drawable.ic_copy,
-                        contentDescription = "Копировать список",
-                        onClick = {
-                            onEvent(
-                                ListsEvent.CopyListClicked(
-                                    listId = list.id,
-                                ),
-                            )
-                        },
-                    ),
-                    ListItemAction(
-                        iconId = com.example.shoppinglist.core.designsystem.R.drawable.ic_delete,
-                        contentDescription = "Удалить список",
-                        onClick = {
-                            onDeleteClick(list)
-                        },
-                    ),
+                listIconContentDescription = stringResource(
+                    R.string.lists_change_icon,
                 ),
                 onListIconClick = {
-                    // Здесь можно открыть выбор иконки.
+                    onListIconClick(list)
                 },
                 onListClick = {
                     onEvent(
                         ListsEvent.ListClicked(
+                            listId = list.id,
+                        ),
+                    )
+                },
+                onEditClick = {
+                    onRenameClick(list)
+                },
+                onCopyClick = {
+                    onEvent(
+                        ListsEvent.CopyListClicked(
                             listId = list.id,
                         ),
                     )
@@ -427,49 +466,5 @@ private fun ShoppingLists(
                 },
             )
         }
-    }
-}
-
-@Composable
-private fun ConfirmDeleteDialog(
-    title: String,
-    onDelete: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-            )
-        },
-        confirmButton = {
-            TextButton(
-                onClick = onDelete,
-            ) {
-                Text(
-                    text = "Удалить",
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-            ) {
-                Text(text = "Отмена")
-            }
-        },
-    )
-}
-
-private fun nextThemeMode(
-    current: ThemeMode,
-): ThemeMode {
-    return when (current) {
-        ThemeMode.SYSTEM -> ThemeMode.DARK
-        ThemeMode.DARK -> ThemeMode.LIGHT
-        ThemeMode.LIGHT -> ThemeMode.SYSTEM
     }
 }

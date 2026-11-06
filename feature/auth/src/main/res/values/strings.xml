@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Заголовки экранов -->
     <string name="auth_login_title">Авторизация</string>
     <string name="auth_registration_title">Регистрация</string>
@@ -18,11 +20,17 @@
     <!-- Ошибки валидации под полями -->
     <string name="auth_error_email_invalid">Некорректный email</string>
     <string name="auth_error_password_too_short">Пароль должен быть длиннее 6 символов</string>
+    <string name="auth_error_password_too_long">Пароль слишком длинный</string>
     <string name="auth_error_passwords_mismatch">Пароли не совпадают</string>
 
-    <!-- Ответы API -->
+    <!-- Ошибки авторизации и ответы API -->
     <string name="auth_error_user_exists">Пользователь с таким email уже существует</string>
     <string name="auth_error_wrong_credentials">Неверный email или пароль</string>
+    <string name="auth_error_session_expired">Сессия истекла. Войдите снова</string>
+    <string name="auth_error_network">Не удалось подключиться к серверу. Проверьте интернет-соединение</string>
     <string name="auth_error_unknown">Не удалось выполнить запрос. Попробуйте ещё раз</string>
+
+    <!-- Успешные операции -->
     <string name="auth_recovery_success">Письмо для восстановления пароля отправлено</string>
+
 </resources>

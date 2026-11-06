@@ -59,11 +59,11 @@ class RegistrationViewModel(
                             event.password,
                         ),
                         passwordRepeatError =
-                            AuthValidator.validatePasswordRepeat(
-                                password = event.password,
-                                passwordRepeat =
-                                    current.passwordRepeat,
-                            ),
+                        AuthValidator.validatePasswordRepeat(
+                            password = event.password,
+                            passwordRepeat =
+                            current.passwordRepeat,
+                        ),
                     )
                 }
             }
@@ -73,11 +73,11 @@ class RegistrationViewModel(
                     current.copy(
                         passwordRepeat = event.passwordRepeat,
                         passwordRepeatError =
-                            AuthValidator.validatePasswordRepeat(
-                                password = current.password,
-                                passwordRepeat =
-                                    event.passwordRepeat,
-                            ),
+                        AuthValidator.validatePasswordRepeat(
+                            password = current.password,
+                            passwordRepeat =
+                            event.passwordRepeat,
+                        ),
                     )
                 }
             }
@@ -86,7 +86,7 @@ class RegistrationViewModel(
                 _state.update { current ->
                     current.copy(
                         isPasswordVisible =
-                            !current.isPasswordVisible,
+                        !current.isPasswordVisible,
                     )
                 }
             }
@@ -95,7 +95,7 @@ class RegistrationViewModel(
                 _state.update { current ->
                     current.copy(
                         isPasswordRepeatVisible =
-                            !current.isPasswordRepeatVisible,
+                        !current.isPasswordRepeatVisible,
                     )
                 }
             }
@@ -125,10 +125,10 @@ class RegistrationViewModel(
                 current.password,
             ),
             passwordRepeatError =
-                AuthValidator.validatePasswordRepeat(
-                    password = current.password,
-                    passwordRepeat = current.passwordRepeat,
-                ),
+            AuthValidator.validatePasswordRepeat(
+                password = current.password,
+                passwordRepeat = current.passwordRepeat,
+            ),
         )
 
         _state.value = validated

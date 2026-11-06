@@ -7,13 +7,13 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.shoppinglist.core.domain.auth.AuthSessionRepository
 import com.example.shoppinglist.core.domain.auth.model.AuthSession
 import com.example.shoppinglist.core.domain.auth.model.AuthTokens
-import java.security.GeneralSecurityException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import java.security.GeneralSecurityException
 
 private val SESSION_KEY = stringPreferencesKey(
     "encrypted_auth_session",

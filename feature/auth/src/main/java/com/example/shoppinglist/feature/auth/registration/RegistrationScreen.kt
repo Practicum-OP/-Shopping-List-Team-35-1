@@ -62,7 +62,7 @@ fun RegistrationScreen(
                     ) {
                         Icon(
                             imageVector =
-                                Icons.AutoMirrored.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(
                                 DesignSystemR.string.common_back,
                             ),

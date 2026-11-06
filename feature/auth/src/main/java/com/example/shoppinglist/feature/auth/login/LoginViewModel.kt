@@ -73,7 +73,7 @@ class LoginViewModel(
                 _state.update { current ->
                     current.copy(
                         isPasswordVisible =
-                            !current.isPasswordVisible,
+                        !current.isPasswordVisible,
                     )
                 }
             }

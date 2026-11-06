@@ -23,17 +23,21 @@ object AppDimens {
     val listItemMinHeight = 56.dp
     val listItemTwoLineMinHeight = 72.dp
     val cardCornerRadius = 12.dp
+    val draggedItemElevation = 6.dp
 
     // Иконки и кнопки
     val iconSize = 24.dp
     val iconContainerSize = 40.dp
     val iconButtonSize = 48.dp
     val buttonHeight = 48.dp
+    val fabSize = 56.dp
 
     // Диалоги и bottom sheet
     val dialogPadding = 24.dp
     val dialogCornerRadius = 28.dp
     val bottomSheetCornerRadius = 28.dp
+    val bottomSheetSideMargin = 6.dp
+    val itemFormCompactWidth = 340.dp
 
     // Иллюстрация пустого состояния
     val emptyStateImageWidth = 324.dp

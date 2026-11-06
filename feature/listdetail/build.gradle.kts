@@ -1,5 +1,6 @@
 plugins {
     id("convention.android.feature")
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {

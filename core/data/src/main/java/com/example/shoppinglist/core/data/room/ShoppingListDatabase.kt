@@ -1,5 +1,6 @@
 package com.example.shoppinglist.core.data.room
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.shoppinglist.core.data.room.dao.ItemHistoryDao
@@ -15,8 +16,14 @@ import com.example.shoppinglist.core.data.room.entity.ShoppingListEntity
         ShoppingItemEntity::class,
         ItemHistoryEntity::class,
     ],
-    version = 2,
-    exportSchema = true
+    version = 3,
+    autoMigrations = [
+        AutoMigration(
+            from = 2,
+            to = 3,
+        ),
+    ],
+    exportSchema = true,
 )
 abstract class ShoppingListDatabase : RoomDatabase() {
 

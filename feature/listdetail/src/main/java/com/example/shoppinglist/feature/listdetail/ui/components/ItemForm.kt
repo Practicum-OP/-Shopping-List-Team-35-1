@@ -76,7 +76,7 @@ internal fun ItemFormContent(
     ) {
         SaveButton(
             mode = form.mode,
-            enabled = form.name.isNotBlank(),
+            enabled = form.isSubmittable,
             onClick = { onEvent(ListDetailEvent.FormSubmitted) },
             modifier = Modifier.padding(end = AppDimens.spacingMedium),
         )

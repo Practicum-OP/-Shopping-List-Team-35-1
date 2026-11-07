@@ -92,15 +92,25 @@ fun AppNavHost(
 
         composable(ScreenRoute.LISTS) {
             ListsRoute(
-                onOpenListDetail = { listId -> navController.navigate(ScreenRoute.listDetail(listId)) },
+                onOpenListDetail = { listId ->
+                    navController.navigate(ScreenRoute.listDetail(listId))
+                },
             )
         }
 
         composable(
             route = ScreenRoute.LIST_DETAIL,
-            arguments = listOf(navArgument("listId") { type = NavType.StringType }),
-        ) {
-            ListDetailRoute(onBackToLists = { navController.popBackStack() })
+            arguments = listOf(
+                navArgument("listId") {
+                    type = NavType.StringType
+                },
+            ),
+        ) { backStackEntry ->
+            val listId = backStackEntry.arguments?.getString("listId").orEmpty()
+            ListDetailRoute(
+                listId = listId,
+                onBackToLists = { navController.popBackStack() },
+            )
         }
     }
 }

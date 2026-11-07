@@ -1,19 +1,20 @@
 package com.example.shoppinglist.feature.listdetail.ui
 
 import android.os.Parcelable
+import com.example.shoppinglist.core.domain.listdetail.ItemQuantity
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ListDetailState(
     val listId: String,
-    val listName: String,
+    val listName: String = "",
     val content: ListContent = ListContent.Loading,
     val sortMode: ItemsSortMode = ItemsSortMode.ALPHABETICAL,
     val itemForm: ItemFormState? = null,
+    val pendingDeleteItemId: String? = null,
 ) : Parcelable
 
-// временная модель для отображения
 @Parcelize
 data class ShoppingItemUi(
     val id: String,
@@ -31,7 +32,9 @@ sealed interface ListContent : Parcelable {
     data object Empty : ListContent
 
     @Parcelize
-    data class Items(val items: List<ShoppingItemUi>) : ListContent // позже заменить на настоящий список
+    data class Items(
+        val items: List<ShoppingItemUi>,
+    ) : ListContent
 }
 
 @Parcelize
@@ -44,7 +47,12 @@ data class ItemFormState(
     val quantityError: String? = null,
     val suggestions: List<String> = emptyList(),
     val unitPickerVisible: Boolean = false,
-) : Parcelable
+) : Parcelable {
+    val isSubmittable: Boolean
+        get() = name.isNotBlank() &&
+            ItemQuantity.parse(quantity) != null &&
+            !unit.isNullOrBlank()
+}
 
 sealed interface FormMode : Parcelable {
     @Parcelize

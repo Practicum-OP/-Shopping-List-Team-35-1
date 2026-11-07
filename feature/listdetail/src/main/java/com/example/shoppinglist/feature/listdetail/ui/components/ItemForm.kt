@@ -80,7 +80,6 @@ internal fun ItemFormContent(
             onClick = { onEvent(ListDetailEvent.FormSubmitted) },
             modifier = Modifier.padding(end = AppDimens.spacingMedium),
         )
-        // TODO(#51): check surfaceContainerLow against Figma (#FFF1E7) after theme update
         Surface(
             modifier = Modifier.weight(1f, fill = false),
             shape = RoundedCornerShape(

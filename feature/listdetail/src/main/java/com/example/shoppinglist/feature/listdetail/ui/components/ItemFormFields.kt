@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -41,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
+import com.example.shoppinglist.core.designsystem.theme.stepperIcon
 import com.example.shoppinglist.feature.listdetail.R
 import com.example.shoppinglist.feature.listdetail.ui.ItemFormState
 import com.example.shoppinglist.feature.listdetail.ui.ItemUnitUi
@@ -233,7 +235,6 @@ private fun UnitField(
     }
 }
 
-// TODO(#51): check secondaryContainer and onSecondaryContainer against Figma after theme update
 @Composable
 private fun QuantityButton(
     @DrawableRes iconRes: Int,
@@ -245,6 +246,9 @@ private fun QuantityButton(
         onClick = onClick,
         modifier = Modifier.padding(top = AppDimens.spacingMedium),
         enabled = enabled,
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            contentColor = MaterialTheme.colorScheme.stepperIcon,
+        ),
     ) {
         Icon(
             painter = painterResource(iconRes),
@@ -305,11 +309,13 @@ private fun SuggestionsList(
     }
 }
 
-// TODO(#51): check outline color against Figma after theme update
 @Composable
 private fun itemFormFieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
-    unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+    focusedLabelColor = MaterialTheme.colorScheme.outline,
+    unfocusedLabelColor = MaterialTheme.colorScheme.outline,
+    focusedBorderColor = MaterialTheme.colorScheme.outline,
     unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+    cursorColor = MaterialTheme.colorScheme.outline,
 )
 
 @Composable

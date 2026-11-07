@@ -35,6 +35,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
+import com.example.shoppinglist.core.designsystem.theme.sortLabel
+import com.example.shoppinglist.core.designsystem.theme.sortLabelHighlighted
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import com.example.shoppinglist.feature.listdetail.R
 import com.example.shoppinglist.core.designsystem.R as DesignR
@@ -43,7 +45,6 @@ private const val SUBMENU_ARROW_ROTATION = -90f
 
 private val sortModesInMenuOrder = listOf(ItemsSortMode.ALPHABETICAL, ItemsSortMode.CUSTOM)
 
-// TODO(#51): check surfaceContainerLow against Figma (#FFF1E7) after theme update
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListDetailMenu(
@@ -93,12 +94,12 @@ private fun SortMenuRow(
             titleRes = R.string.list_detail_menu_sort,
             onClick = { isExpanded = true },
             modifier = if (isExpanded) {
-                // TODO(#51): check secondaryContainer against Figma after theme update
                 Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
             } else {
                 Modifier
             },
             subtitleRes = sortMode.labelRes,
+            highlighted = isExpanded,
             trailing = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = false,
@@ -151,6 +152,7 @@ private fun MenuRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     @StringRes subtitleRes: Int? = null,
+    highlighted: Boolean = false,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -175,7 +177,11 @@ private fun MenuRow(
                 Text(
                     text = stringResource(res),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (highlighted) {
+                        MaterialTheme.colorScheme.sortLabelHighlighted
+                    } else {
+                        MaterialTheme.colorScheme.sortLabel
+                    },
                 )
             }
         }

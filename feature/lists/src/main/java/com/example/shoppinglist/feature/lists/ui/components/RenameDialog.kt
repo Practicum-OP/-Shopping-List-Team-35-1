@@ -59,6 +59,10 @@ fun RenameDialog(
                     MaterialTheme.colorScheme.outline,
                     focusedBorderColor =
                     MaterialTheme.colorScheme.outline,
+                    unfocusedLabelColor =
+                    MaterialTheme.colorScheme.outline,
+                    focusedLabelColor =
+                    MaterialTheme.colorScheme.outline,
                 ),
             )
         },

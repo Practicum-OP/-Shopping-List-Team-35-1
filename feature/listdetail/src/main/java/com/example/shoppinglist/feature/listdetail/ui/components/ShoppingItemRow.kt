@@ -122,7 +122,6 @@ private fun SwipeActionsContainer(
     }
 }
 
-// TODO(#51): check secondaryContainer and onSecondaryContainer against Figma after theme update
 @Composable
 private fun SwipeAction(
     @DrawableRes iconRes: Int,

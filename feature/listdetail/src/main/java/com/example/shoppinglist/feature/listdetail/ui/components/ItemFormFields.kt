@@ -235,7 +235,6 @@ private fun UnitField(
     }
 }
 
-// TODO(#51): check secondaryContainer and onSecondaryContainer against Figma after theme update
 @Composable
 private fun QuantityButton(
     @DrawableRes iconRes: Int,
@@ -310,7 +309,6 @@ private fun SuggestionsList(
     }
 }
 
-// TODO(#51): check outline color against Figma after theme update
 @Composable
 private fun itemFormFieldColors(): TextFieldColors = OutlinedTextFieldDefaults.colors(
     focusedLabelColor = MaterialTheme.colorScheme.outline,

@@ -45,7 +45,6 @@ private const val SUBMENU_ARROW_ROTATION = -90f
 
 private val sortModesInMenuOrder = listOf(ItemsSortMode.ALPHABETICAL, ItemsSortMode.CUSTOM)
 
-// TODO(#51): check surfaceContainerLow against Figma (#FFF1E7) after theme update
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListDetailMenu(
@@ -95,7 +94,6 @@ private fun SortMenuRow(
             titleRes = R.string.list_detail_menu_sort,
             onClick = { isExpanded = true },
             modifier = if (isExpanded) {
-                // TODO(#51): check secondaryContainer against Figma after theme update
                 Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
             } else {
                 Modifier

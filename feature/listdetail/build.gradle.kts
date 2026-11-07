@@ -9,4 +9,6 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+    implementation(project(":core:designsystem"))
+    implementation("androidx.compose.foundation:foundation")
 }

@@ -12,7 +12,7 @@ val PeachIvory = Color(0xFFFFF1E7)
 
 // Светлые бежевые и персиковые оттенки
 val LinenBeige = Color(0xFFFAEBE0)
-val CreamBeige = Color(0xFFF4E6DA) // диалог surfase container high (light)
+val CreamBeige = Color(0xFFF4E6DA) // диалог surface container high (light)
 val LightBeige = Color(0xFFEEE0D5)
 val PalePeach = Color(0xFFFFDCBB)
 val SoftPeach = Color(0xFFFEDDBD) // кнопка cancel- secondary cont (light)

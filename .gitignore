@@ -17,3 +17,6 @@
 # Ключи подписи приложения
 *.jks
 *.keystore
+
+# Локальные данные для подписи release
+keystore.properties

@@ -6,4 +6,6 @@ enum class MeasurementUnit {
     GRAMS,
     LITERS,
     MILLILITERS,
+    PACKAGE,
+    PACK,
 }

@@ -1,5 +1,15 @@
 package com.example.shoppinglist.core.domain.di
 
+import com.example.shoppinglist.core.domain.listdetail.interactor.ChangeItemsSortMode
+import com.example.shoppinglist.core.domain.listdetail.interactor.ClearPurchasedShoppingItems
+import com.example.shoppinglist.core.domain.listdetail.interactor.DeleteAllShoppingItems
+import com.example.shoppinglist.core.domain.listdetail.interactor.DeleteShoppingItem
+import com.example.shoppinglist.core.domain.listdetail.interactor.MoveShoppingItem
+import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveItemSuggestions
+import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveShoppingItems
+import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveShoppingList
+import com.example.shoppinglist.core.domain.listdetail.interactor.SaveShoppingItem
+import com.example.shoppinglist.core.domain.listdetail.interactor.ToggleShoppingItemPurchased
 import com.example.shoppinglist.core.domain.lists.interactor.ChangeShoppingListIcon
 import com.example.shoppinglist.core.domain.lists.interactor.CopyShoppingList
 import com.example.shoppinglist.core.domain.lists.interactor.CreateShoppingList
@@ -63,6 +73,67 @@ val domainModule = module {
 
     factory {
         ChangeThemeMode(
+            repository = get(),
+        )
+    }
+
+    factory {
+        ObserveShoppingList(
+            repository = get(),
+        )
+    }
+
+    factory {
+        ObserveShoppingItems(
+            repository = get(),
+        )
+    }
+
+    factory {
+        ObserveItemSuggestions(
+            repository = get(),
+        )
+    }
+
+    factory {
+        SaveShoppingItem(
+            itemRepository = get(),
+            historyRepository = get(),
+        )
+    }
+
+    factory {
+        ToggleShoppingItemPurchased(
+            repository = get(),
+        )
+    }
+
+    factory {
+        DeleteShoppingItem(
+            repository = get(),
+        )
+    }
+
+    factory {
+        DeleteAllShoppingItems(
+            repository = get(),
+        )
+    }
+
+    factory {
+        ClearPurchasedShoppingItems(
+            repository = get(),
+        )
+    }
+
+    factory {
+        ChangeItemsSortMode(
+            repository = get(),
+        )
+    }
+
+    factory {
+        MoveShoppingItem(
             repository = get(),
         )
     }

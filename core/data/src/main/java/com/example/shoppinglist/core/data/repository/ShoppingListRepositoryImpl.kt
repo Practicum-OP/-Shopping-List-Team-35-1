@@ -3,6 +3,7 @@ package com.example.shoppinglist.core.data.repository
 import com.example.shoppinglist.core.data.mapper.toDomain
 import com.example.shoppinglist.core.data.mapper.toEntity
 import com.example.shoppinglist.core.data.room.dao.ShoppingListDao
+import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import com.example.shoppinglist.core.domain.lists.ShoppingList
 import com.example.shoppinglist.core.domain.lists.ShoppingListRepository
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,9 @@ class ShoppingListRepositoryImpl(
         }
     }
 
-    override suspend fun getById(id: String): ShoppingList? {
+    override suspend fun getById(
+        id: String,
+    ): ShoppingList? {
         return dao.getById(id)?.toDomain()
     }
 
@@ -29,34 +32,50 @@ class ShoppingListRepositoryImpl(
         name: String,
         iconKey: String,
     ) {
+        val normalizedName = name.trim()
+
+        if (normalizedName.isEmpty()) {
+            return
+        }
+
         val now = System.currentTimeMillis()
         val sortOrder = dao.getNextSortOrder()
 
         val shoppingList = ShoppingList(
             id = UUID.randomUUID().toString(),
-            name = name.trim(),
+            name = normalizedName,
             iconKey = iconKey,
-            itemsSortMode = com.example.shoppinglist.core.domain.lists.ItemsSortMode.CUSTOM,
+            itemsSortMode = ItemsSortMode.ALPHABETICAL,
             sortOrder = sortOrder,
             createdAt = now,
             updatedAt = now,
         )
 
-        dao.upsert(shoppingList.toEntity())
+        dao.upsert(
+            shoppingList.toEntity(),
+        )
     }
 
     override suspend fun rename(
         id: String,
         name: String,
     ) {
+        val normalizedName = name.trim()
+
+        if (normalizedName.isEmpty()) {
+            return
+        }
+
         dao.rename(
             id = id,
-            name = name.trim(),
+            name = normalizedName,
             updatedAt = System.currentTimeMillis(),
         )
     }
 
-    override suspend fun deleteById(id: String) {
+    override suspend fun deleteById(
+        id: String,
+    ) {
         dao.deleteById(id)
     }
 
@@ -68,28 +87,44 @@ class ShoppingListRepositoryImpl(
         id: String,
         copiedName: String,
     ) {
-        val source = dao.getById(id) ?: return
+        val source = dao.getById(id)
+            ?: return
+
+        val normalizedName = copiedName.trim()
+
+        if (normalizedName.isEmpty()) {
+            return
+        }
+
         val now = System.currentTimeMillis()
         val sortOrder = dao.getNextSortOrder()
 
         val copy = source.toDomain().copy(
             id = UUID.randomUUID().toString(),
-            name = copiedName.trim(),
+            name = normalizedName,
             sortOrder = sortOrder,
             createdAt = now,
             updatedAt = now,
         )
 
-        dao.upsert(copy.toEntity())
+        dao.upsert(
+            copy.toEntity(),
+        )
     }
 
     override suspend fun updateIcon(
         id: String,
         iconKey: String,
     ) {
+        val normalizedIconKey = iconKey.trim()
+
+        if (normalizedIconKey.isEmpty()) {
+            return
+        }
+
         dao.updateIcon(
             id = id,
-            iconKey = iconKey,
+            iconKey = normalizedIconKey,
             updatedAt = System.currentTimeMillis(),
         )
     }

@@ -41,13 +41,20 @@ fun ListDetailScreen(
     onEvent: (ListDetailEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isMenuVisible by rememberSaveable { mutableStateOf(false) }
-    var pendingConfirmation by rememberSaveable { mutableStateOf<PendingConfirmation?>(null) }
+    var isMenuVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var pendingConfirmation by rememberSaveable {
+        mutableStateOf<PendingConfirmation?>(null)
+    }
 
     ListDetailScaffold(
         state = state,
         onEvent = onEvent,
-        onMenuClick = { isMenuVisible = true },
+        onMenuClick = {
+            isMenuVisible = true
+        },
         modifier = modifier,
     )
 
@@ -66,20 +73,56 @@ fun ListDetailScreen(
                 isMenuVisible = false
                 pendingConfirmation = PendingConfirmation.CLEAR_PURCHASED
             },
-            onDismiss = { isMenuVisible = false },
+            onDismiss = {
+                isMenuVisible = false
+            },
         )
     }
 
     pendingConfirmation?.let { confirmation ->
         ConfirmationDialog(
             confirmation = confirmation,
-            onEvent = onEvent,
-            onDismiss = { pendingConfirmation = null },
+            onConfirm = {
+                pendingConfirmation = null
+                when (confirmation) {
+                    PendingConfirmation.DELETE_ALL -> onEvent(ListDetailEvent.DeleteAllItemsConfirmed)
+                    PendingConfirmation.CLEAR_PURCHASED -> onEvent(ListDetailEvent.ClearPurchasedConfirmed)
+                }
+            },
+            onDismiss = {
+                pendingConfirmation = null
+            },
         )
     }
 
+    state.pendingDeleteItemId?.let { itemId ->
+        val item = (state.content as? ListContent.Items)
+            ?.items
+            ?.firstOrNull { it.id == itemId }
+
+        if (item != null) {
+            DeleteDialog(
+                onDelete = {
+                    onEvent(ListDetailEvent.DeleteItemConfirmed)
+                },
+                onDismiss = {
+                    onEvent(ListDetailEvent.DeleteItemDismissed)
+                },
+                dialogTitle = stringResource(
+                    R.string.list_detail_delete_item_dialog_title,
+                    item.name,
+                ),
+                contentDescription = null,
+                idItem = item.id,
+            )
+        }
+    }
+
     state.itemForm?.let { form ->
-        ItemForm(form = form, onEvent = onEvent)
+        ItemForm(
+            form = form,
+            onEvent = onEvent,
+        )
     }
 }
 
@@ -95,12 +138,18 @@ private fun ListDetailScaffold(
         topBar = {
             ListDetailTopBar(
                 listName = state.listName,
-                onBackClick = { onEvent(ListDetailEvent.BackClicked) },
+                onBackClick = {
+                    onEvent(ListDetailEvent.BackClicked)
+                },
                 onMenuClick = onMenuClick,
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onEvent(ListDetailEvent.AddItemClicked) }) {
+            FloatingActionButton(
+                onClick = {
+                    onEvent(ListDetailEvent.AddItemClicked)
+                },
+            ) {
                 Icon(
                     painter = painterResource(DesignR.drawable.ic_add),
                     contentDescription = stringResource(R.string.list_detail_add_item),
@@ -112,7 +161,9 @@ private fun ListDetailScaffold(
             content = state.content,
             sortMode = state.sortMode,
             onEvent = onEvent,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
         )
     }
 }
@@ -159,49 +210,49 @@ private fun ListDetailContent(
     modifier: Modifier = Modifier,
 ) {
     when (content) {
-        ListContent.Loading -> Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircularProgressIndicator()
+        ListContent.Loading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
-        ListContent.Empty -> Placeholder(
-            imageRes = DesignR.drawable.illustration_product_list,
-            titleRes = R.string.list_detail_empty_title,
-            descriptionRes = R.string.list_detail_empty_description,
-            contentDescriptionRes = R.string.list_detail_empty_image_description,
-            modifier = modifier,
-        )
+        ListContent.Empty -> {
+            Placeholder(
+                imageRes = DesignR.drawable.illustration_product_list,
+                titleRes = R.string.list_detail_empty_title,
+                descriptionRes = R.string.list_detail_empty_description,
+                contentDescriptionRes = R.string.list_detail_empty_image_description,
+                modifier = modifier.fillMaxSize(),
+            )
+        }
 
-        is ListContent.Items -> ShoppingItemsList(
-            items = content.items,
-            sortMode = sortMode,
-            onEvent = onEvent,
-            modifier = modifier,
-        )
+        is ListContent.Items -> {
+            ShoppingItemsList(
+                items = content.items,
+                sortMode = sortMode,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
     }
 }
 
 @Composable
 private fun ConfirmationDialog(
     confirmation: PendingConfirmation,
-    onEvent: (ListDetailEvent) -> Unit,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val (titleRes, event) = when (confirmation) {
-        PendingConfirmation.DELETE_ALL ->
-            R.string.list_detail_delete_all_dialog_title to ListDetailEvent.DeleteAllItemsConfirmed
-
-        PendingConfirmation.CLEAR_PURCHASED ->
-            R.string.list_detail_clear_purchased_dialog_title to ListDetailEvent.ClearPurchasedConfirmed
+    val titleRes = when (confirmation) {
+        PendingConfirmation.DELETE_ALL -> R.string.list_detail_delete_all_dialog_title
+        PendingConfirmation.CLEAR_PURCHASED -> R.string.list_detail_clear_purchased_dialog_title
     }
 
     DeleteDialog(
-        onDelete = {
-            onDismiss()
-            onEvent(event)
-        },
+        onDelete = { onConfirm() },
         onDismiss = onDismiss,
         dialogTitle = stringResource(titleRes),
         contentDescription = null,

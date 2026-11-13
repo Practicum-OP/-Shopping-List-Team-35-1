@@ -22,14 +22,20 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+private const val STOP_TIMEOUT_MILLIS = 5_000L
+
+data class ListsInteractors(
+    val observeShoppingLists: ObserveShoppingLists,
+    val createShoppingList: CreateShoppingList,
+    val renameShoppingList: RenameShoppingList,
+    val deleteShoppingList: DeleteShoppingList,
+    val deleteAllShoppingLists: DeleteAllShoppingLists,
+    val copyShoppingList: CopyShoppingList,
+    val changeShoppingListIcon: ChangeShoppingListIcon,
+)
+
 class ListsViewModel(
-    observeShoppingLists: ObserveShoppingLists,
-    private val createShoppingList: CreateShoppingList,
-    private val renameShoppingList: RenameShoppingList,
-    private val deleteShoppingList: DeleteShoppingList,
-    private val deleteAllShoppingLists: DeleteAllShoppingLists,
-    private val copyShoppingList: CopyShoppingList,
-    private val changeShoppingListIcon: ChangeShoppingListIcon,
+    private val interactors: ListsInteractors,
     observeThemeMode: ObserveThemeMode,
     private val changeThemeMode: ChangeThemeMode,
 ) : ViewModel() {
@@ -44,7 +50,7 @@ class ListsViewModel(
     val effect: Flow<ListsEffect> = _effect.receiveAsFlow()
 
     val state: StateFlow<ListsState> = combine(
-        observeShoppingLists(),
+        interactors.observeShoppingLists(),
         searchOpened,
         searchQuery,
         observeThemeMode(),
@@ -89,88 +95,38 @@ class ListsViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
         initialValue = ListsState(),
     )
 
     fun onEvent(event: ListsEvent) {
         when (event) {
-            ListsEvent.SearchOpened -> {
-                searchOpened.value = true
-            }
-
+            ListsEvent.SearchOpened -> searchOpened.value = true
             ListsEvent.SearchClosed -> {
                 searchOpened.value = false
                 searchQuery.value = ""
             }
-
-            ListsEvent.SearchCleared -> {
-                searchQuery.value = ""
-            }
-
-            is ListsEvent.SearchQueryChanged -> {
-                searchQuery.value = event.query
-            }
-
-            is ListsEvent.CreateListConfirmed -> {
-                createList(event.name)
-            }
-
-            ListsEvent.DeleteAllListsConfirmed -> {
-                deleteAllLists()
-            }
-
-            is ListsEvent.ThemeModeChanged -> {
-                changeTheme(event.mode)
-            }
-
-            is ListsEvent.ThemeChanged -> {
-                changeTheme(
-                    mode = if (event.isDarkTheme) {
-                        ThemeMode.DARK
-                    } else {
-                        ThemeMode.LIGHT
-                    },
-                )
-            }
-
-            is ListsEvent.ListIconSelected -> {
-                changeIcon(
-                    listId = event.listId,
-                    iconKey = event.iconKey,
-                )
-            }
-
-            is ListsEvent.RenameListConfirmed -> {
-                renameList(
-                    listId = event.listId,
-                    name = event.name,
-                )
-            }
-
-            is ListsEvent.DeleteListConfirmed -> {
-                deleteList(event.listId)
-            }
-
-            is ListsEvent.CopyListClicked -> {
-                copyList(event.listId)
-            }
-
-            is ListsEvent.ListClicked -> {
-                viewModelScope.launch {
-                    _effect.send(
-                        ListsEffect.OpenList(
-                            listId = event.listId,
-                        ),
-                    )
-                }
+            ListsEvent.SearchCleared -> searchQuery.value = ""
+            is ListsEvent.SearchQueryChanged -> searchQuery.value = event.query
+            is ListsEvent.CreateListConfirmed -> createList(event.name)
+            ListsEvent.DeleteAllListsConfirmed -> deleteAllLists()
+            is ListsEvent.ThemeModeChanged -> changeTheme(event.mode)
+            is ListsEvent.ThemeChanged -> changeTheme(
+                mode = if (event.isDarkTheme) ThemeMode.DARK else ThemeMode.LIGHT,
+            )
+            is ListsEvent.ListIconSelected -> changeIcon(listId = event.listId, iconKey = event.iconKey)
+            is ListsEvent.RenameListConfirmed -> renameList(listId = event.listId, name = event.name)
+            is ListsEvent.DeleteListConfirmed -> deleteList(event.listId)
+            is ListsEvent.CopyListClicked -> copyList(event.listId)
+            is ListsEvent.ListClicked -> viewModelScope.launch {
+                _effect.send(ListsEffect.OpenList(listId = event.listId))
             }
         }
     }
 
     private fun createList(name: String) {
         executeOperation {
-            createShoppingList(name)
+            interactors.createShoppingList(name)
         }
     }
 
@@ -179,7 +135,7 @@ class ListsViewModel(
         name: String,
     ) {
         executeOperation {
-            renameShoppingList(
+            interactors.renameShoppingList(
                 id = listId,
                 name = name,
             )
@@ -188,19 +144,19 @@ class ListsViewModel(
 
     private fun deleteList(listId: String) {
         executeOperation {
-            deleteShoppingList(listId)
+            interactors.deleteShoppingList(listId)
         }
     }
 
     private fun deleteAllLists() {
         executeOperation {
-            deleteAllShoppingLists()
+            interactors.deleteAllShoppingLists()
         }
     }
 
     private fun copyList(listId: String) {
         executeOperation {
-            copyShoppingList(listId)
+            interactors.copyShoppingList(listId)
         }
     }
 
@@ -209,7 +165,7 @@ class ListsViewModel(
         iconKey: String,
     ) {
         executeOperation {
-            changeShoppingListIcon(
+            interactors.changeShoppingListIcon(
                 id = listId,
                 iconKey = iconKey,
             )

@@ -1,5 +1,6 @@
 package com.example.shoppinglist.feature.lists.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import com.example.shoppinglist.feature.lists.ui.components.ListIconPickerBottom
 import com.example.shoppinglist.feature.lists.ui.components.RenameDialog
 import com.example.shoppinglist.feature.lists.ui.components.SearchField
 import com.example.shoppinglist.feature.lists.ui.components.ShoppingListItem
+import com.example.shoppinglist.feature.lists.ui.components.ShoppingListItemActions
 
 @Composable
 fun ListsScreen(
@@ -73,58 +75,25 @@ fun ListsScreen(
         mutableStateOf<String?>(null)
     }
 
-    val isSystemDark = isSystemInDarkTheme()
+    val isDarkTheme = state.themeMode.isDark(
+        isSystemDark = isSystemInDarkTheme(),
+    )
 
-    val isDarkTheme = when (state.themeMode) {
-        ThemeMode.SYSTEM -> isSystemDark
-        ThemeMode.LIGHT -> false
-        ThemeMode.DARK -> true
+    BackHandler(enabled = state.topContent is TopContent.SearchField) {
+        onEvent(ListsEvent.SearchClosed)
     }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            when (val topContent = state.topContent) {
-                TopContent.AppBar -> {
-                    ListsTopAppBar(
-                        isDarkTheme = isDarkTheme,
-                        onSearchClick = {
-                            onEvent(ListsEvent.SearchOpened)
-                        },
-                        onDeleteAllClick = {
-                            showDeleteAllDialog = true
-                        },
-                        onThemeClick = {
-                            onEvent(
-                                ListsEvent.ThemeModeChanged(
-                                    mode = if (isDarkTheme) {
-                                        ThemeMode.LIGHT
-                                    } else {
-                                        ThemeMode.DARK
-                                    },
-                                ),
-                            )
-                        },
-                    )
-                }
-
-                is TopContent.SearchField -> {
-                    SearchField(
-                        query = topContent.searchQuery,
-                        onQueryChange = { query ->
-                            onEvent(
-                                ListsEvent.SearchQueryChanged(query),
-                            )
-                        },
-                        onBackClick = {
-                            onEvent(ListsEvent.SearchClosed)
-                        },
-                        onClearClick = {
-                            onEvent(ListsEvent.SearchCleared)
-                        },
-                    )
-                }
-            }
+            ListsTopBar(
+                topContent = state.topContent,
+                isDarkTheme = isDarkTheme,
+                onEvent = onEvent,
+                onDeleteAllClick = {
+                    showDeleteAllDialog = true
+                },
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -155,7 +124,8 @@ fun ListsScreen(
             onListIconClick = { list ->
                 iconPickerListId = list.id
             },
-            innerPadding = innerPadding,
+            modifier = Modifier.padding(innerPadding),
+            pendingDeleteListId = deleteListId,
         )
     }
 
@@ -265,6 +235,62 @@ fun ListsScreen(
     }
 }
 
+private fun ThemeMode.isDark(isSystemDark: Boolean): Boolean {
+    return when (this) {
+        ThemeMode.SYSTEM -> isSystemDark
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
+}
+
+@Composable
+private fun ListsTopBar(
+    topContent: TopContent,
+    isDarkTheme: Boolean,
+    onEvent: (ListsEvent) -> Unit,
+    onDeleteAllClick: () -> Unit,
+) {
+    when (topContent) {
+        TopContent.AppBar -> {
+            ListsTopAppBar(
+                isDarkTheme = isDarkTheme,
+                onSearchClick = {
+                    onEvent(ListsEvent.SearchOpened)
+                },
+                onDeleteAllClick = onDeleteAllClick,
+                onThemeClick = {
+                    onEvent(
+                        ListsEvent.ThemeModeChanged(
+                            mode = if (isDarkTheme) {
+                                ThemeMode.LIGHT
+                            } else {
+                                ThemeMode.DARK
+                            },
+                        ),
+                    )
+                },
+            )
+        }
+
+        is TopContent.SearchField -> {
+            SearchField(
+                query = topContent.searchQuery,
+                onQueryChange = { query ->
+                    onEvent(
+                        ListsEvent.SearchQueryChanged(query),
+                    )
+                },
+                onBackClick = {
+                    onEvent(ListsEvent.SearchClosed)
+                },
+                onClearClick = {
+                    onEvent(ListsEvent.SearchCleared)
+                },
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ListsTopAppBar(
@@ -333,7 +359,8 @@ private fun ListsContent(
     onRenameClick: (ShoppingList) -> Unit,
     onDeleteClick: (ShoppingList) -> Unit,
     onListIconClick: (ShoppingList) -> Unit,
-    innerPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    pendingDeleteListId: String? = null,
 ) {
     val isSearchOpened = state.topContent is TopContent.SearchField
 
@@ -342,9 +369,7 @@ private fun ListsContent(
         )?.searchQuery?.isBlank() == true
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        modifier = modifier.fillMaxSize(),
     ) {
         when (val mainContent = state.mainContent) {
             MainContent.Loading -> {
@@ -386,6 +411,7 @@ private fun ListsContent(
                     onRenameClick = onRenameClick,
                     onDeleteClick = onDeleteClick,
                     onListIconClick = onListIconClick,
+                    pendingDeleteListId = pendingDeleteListId,
                 )
             }
 
@@ -396,6 +422,7 @@ private fun ListsContent(
                     onRenameClick = onRenameClick,
                     onDeleteClick = onDeleteClick,
                     onListIconClick = onListIconClick,
+                    pendingDeleteListId = pendingDeleteListId,
                 )
             }
         }
@@ -419,6 +446,7 @@ private fun ShoppingLists(
     onRenameClick: (ShoppingList) -> Unit,
     onDeleteClick: (ShoppingList) -> Unit,
     onListIconClick: (ShoppingList) -> Unit,
+    pendingDeleteListId: String? = null,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -435,35 +463,38 @@ private fun ShoppingLists(
         ) { list ->
             ShoppingListItem(
                 name = list.name,
+                isDeletePending = list.id == pendingDeleteListId,
                 listIconId = ListIconCatalog.drawableRes(
                     list.iconKey,
                 ),
                 listIconContentDescription = stringResource(
                     R.string.lists_change_icon,
                 ),
-                onListIconClick = {
-                    onListIconClick(list)
-                },
-                onListClick = {
-                    onEvent(
-                        ListsEvent.ListClicked(
-                            listId = list.id,
-                        ),
-                    )
-                },
-                onEditClick = {
-                    onRenameClick(list)
-                },
-                onCopyClick = {
-                    onEvent(
-                        ListsEvent.CopyListClicked(
-                            listId = list.id,
-                        ),
-                    )
-                },
-                onDeleteClick = {
-                    onDeleteClick(list)
-                },
+                actions = ShoppingListItemActions(
+                    onListIconClick = {
+                        onListIconClick(list)
+                    },
+                    onListClick = {
+                        onEvent(
+                            ListsEvent.ListClicked(
+                                listId = list.id,
+                            ),
+                        )
+                    },
+                    onEditClick = {
+                        onRenameClick(list)
+                    },
+                    onCopyClick = {
+                        onEvent(
+                            ListsEvent.CopyListClicked(
+                                listId = list.id,
+                            ),
+                        )
+                    },
+                    onDeleteClick = {
+                        onDeleteClick(list)
+                    },
+                ),
             )
         }
     }

@@ -9,5 +9,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.activity.compose)
     implementation(project(":core:domain"))
 }

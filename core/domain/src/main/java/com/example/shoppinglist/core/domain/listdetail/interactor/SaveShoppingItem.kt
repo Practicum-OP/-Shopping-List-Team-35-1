@@ -19,10 +19,9 @@ class SaveShoppingItem(
         unitKey: String,
     ) {
         val normalizedName = name.trim()
-        if (normalizedName.isEmpty()) return
-
-        val quantity = ItemQuantity.parse(quantityText) ?: return
-        val unit = unitKey.toMeasurementUnit() ?: return
+        val quantity = ItemQuantity.parse(quantityText)
+        val unit = unitKey.toMeasurementUnit()
+        if (normalizedName.isEmpty() || quantity == null || unit == null) return
 
         val oldItem = itemId?.let { itemRepository.getById(it) }
         val now = System.currentTimeMillis()

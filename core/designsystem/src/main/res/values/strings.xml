@@ -1,0 +1,21 @@
+<resources>
+    <!-- Кнопки диалогов -->
+    <string name="common_cancel">Отмена</string>
+    <string name="common_delete">Удалить</string>
+
+    <!-- contentDescription общих иконок -->
+    <string name="common_back">Назад</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_clear">Очистить</string>
+    <string name="common_done">Готово</string>
+    <string name="common_add">Добавить</string>
+    <string name="common_edit">Редактировать</string>
+    <string name="common_copy">Копировать</string>
+    <string name="common_more">Ещё</string>
+    <string name="common_show_password">Показать пароль</string>
+    <string name="common_hide_password">Скрыть пароль</string>
+
+    <!-- Диалоги: text, title -->
+
+    <string name="list_name_hint">Название списка</string>
+</resources>

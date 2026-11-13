@@ -1,0 +1,8 @@
+<resources>
+    <string name="intro_title">Добро пожаловать в Список покупок!</string>
+    <string name="intro_description">Создавайте списки, добавляйте товары, отмечайте, что уже куплено</string>
+
+    <!-- contentDescription -->
+    <string name="intro_logo_description">Список покупок</string>
+    <string name="intro_image_description">Девушка с тележкой покупок</string>
+</resources>

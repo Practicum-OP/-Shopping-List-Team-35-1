@@ -24,6 +24,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shoppinglist.core.designsystem.theme.AppDimens
 
+private const val IMAGE_ASPECT_RATIO = 0.926f
+private const val IMAGE_SPACING_RATIO = 6.25f
+
 @Composable
 fun Placeholder(
     @DrawableRes imageRes: Int,
@@ -32,8 +35,6 @@ fun Placeholder(
     @StringRes contentDescriptionRes: Int,
     modifier: Modifier = Modifier,
 ) {
-    val imageAspectRatio = 0.926f
-    val imageSpacingRatio = 6.25f
     val screenHorizontalPad = 44.dp
 
     BoxWithConstraints(
@@ -44,9 +45,9 @@ fun Placeholder(
         val imageHeight: Dp
 
         if (maxHeight > maxWidth) {
-            imageHeight = maxWidth * imageAspectRatio
+            imageHeight = maxWidth * IMAGE_ASPECT_RATIO
         } else {
-            imageHeight = (maxHeight - maxHeight / imageSpacingRatio - AppDimens.listItemTwoLineMinHeight)
+            imageHeight = (maxHeight - maxHeight / IMAGE_SPACING_RATIO - AppDimens.listItemTwoLineMinHeight)
                 .coerceAtLeast(0.dp)
         }
 
@@ -65,7 +66,7 @@ fun Placeholder(
                 contentScale = ContentScale.Fit,
             )
 
-            Spacer(modifier = Modifier.height(imageHeight / imageSpacingRatio))
+            Spacer(modifier = Modifier.height(imageHeight / IMAGE_SPACING_RATIO))
 
             Text(
                 text = stringResource(titleRes),

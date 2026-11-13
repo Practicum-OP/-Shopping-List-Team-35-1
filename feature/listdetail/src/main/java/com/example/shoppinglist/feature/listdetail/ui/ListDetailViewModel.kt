@@ -3,16 +3,6 @@ package com.example.shoppinglist.feature.listdetail.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.core.domain.listdetail.ShoppingItem
-import com.example.shoppinglist.core.domain.listdetail.interactor.ChangeItemsSortMode
-import com.example.shoppinglist.core.domain.listdetail.interactor.ClearPurchasedShoppingItems
-import com.example.shoppinglist.core.domain.listdetail.interactor.DeleteAllShoppingItems
-import com.example.shoppinglist.core.domain.listdetail.interactor.DeleteShoppingItem
-import com.example.shoppinglist.core.domain.listdetail.interactor.MoveShoppingItem
-import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveItemSuggestions
-import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveShoppingItems
-import com.example.shoppinglist.core.domain.listdetail.interactor.ObserveShoppingList
-import com.example.shoppinglist.core.domain.listdetail.interactor.SaveShoppingItem
-import com.example.shoppinglist.core.domain.listdetail.interactor.ToggleShoppingItemPurchased
 import com.example.shoppinglist.core.domain.lists.ItemsSortMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,26 +16,18 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
+
+private const val STOP_TIMEOUT_MILLIS = 5_000L
 
 class ListDetailViewModel(
     private val listId: String,
-    observeShoppingList: ObserveShoppingList,
-    observeShoppingItems: ObserveShoppingItems,
-    observeItemSuggestions: ObserveItemSuggestions,
-    private val saveShoppingItem: SaveShoppingItem,
-    private val toggleShoppingItemPurchased: ToggleShoppingItemPurchased,
-    private val deleteShoppingItem: DeleteShoppingItem,
-    private val deleteAllShoppingItems: DeleteAllShoppingItems,
-    private val clearPurchasedShoppingItems: ClearPurchasedShoppingItems,
-    private val changeItemsSortMode: ChangeItemsSortMode,
-    private val moveShoppingItem: MoveShoppingItem,
+    private val interactors: ListDetailInteractors,
 ) : ViewModel() {
 
-    private val listFlow = observeShoppingList(listId)
+    private val listFlow = interactors.observeShoppingList(listId)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = null,
         )
 
@@ -57,14 +39,14 @@ class ListDetailViewModel(
 
     private val itemsFlow = sortModeFlow
         .flatMapLatest { sortMode ->
-            observeShoppingItems(listId, sortMode)
+            interactors.observeShoppingItems(listId, sortMode)
         }
         .onEach { items ->
             latestItems = items
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
             initialValue = emptyList(),
         )
 
@@ -78,7 +60,7 @@ class ListDetailViewModel(
             if (query.isBlank()) {
                 flowOf(emptyList())
             } else {
-                observeItemSuggestions(query).map { list ->
+                interactors.observeItemSuggestions(query).map { list ->
                     list.map { it.name }
                 }
             }
@@ -107,7 +89,7 @@ class ListDetailViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
         initialValue = ListDetailState(
             listId = listId,
             listName = "",
@@ -116,117 +98,67 @@ class ListDetailViewModel(
     )
 
     fun onEvent(event: ListDetailEvent) {
-        when (event) {
-            ListDetailEvent.AddItemClicked -> {
-                formFlow.value = ItemFormState(mode = FormMode.Create)
-            }
-
-            ListDetailEvent.FormClosed -> {
-                formFlow.value = null
-            }
-
-            ListDetailEvent.FormSubmitted -> {
-                submitForm()
-            }
-
-            is ListDetailEvent.NameChanged -> {
-                formFlow.update { it?.copy(name = event.name) }
-            }
-
-            is ListDetailEvent.SuggestionSelected -> {
-                formFlow.update {
-                    it?.copy(
-                        name = event.suggestion,
-                        suggestions = emptyList(),
-                    )
-                }
-            }
-
-            is ListDetailEvent.QuantityChanged -> {
-                formFlow.update {
-                    it?.copy(quantity = sanitizeQuantityInput(event.quantity))
-                }
-            }
-
-            ListDetailEvent.QuantityIncreased -> {
-                formFlow.update { current ->
-                    current?.copy(quantity = stepQuantity(current.quantity, 1))
-                }
-            }
-
-            ListDetailEvent.QuantityDecreased -> {
-                formFlow.update { current ->
-                    current?.copy(quantity = stepQuantity(current.quantity, -1))
-                }
-            }
-
-            ListDetailEvent.UnitPickerOpened -> {
-                formFlow.update { it?.copy(unitPickerVisible = true) }
-            }
-
-            ListDetailEvent.UnitPickerClosed -> {
-                formFlow.update { it?.copy(unitPickerVisible = false) }
-            }
-
-            is ListDetailEvent.UnitSelected -> {
-                formFlow.update {
-                    it?.copy(
-                        unit = event.unit,
-                        unitPickerVisible = false,
-                    )
-                }
-            }
-
-            is ListDetailEvent.EditItemClicked -> {
-                openEdit(event.itemId)
-            }
-
-            is ListDetailEvent.DeleteItemClicked -> {
-                pendingDeleteItemIdFlow.value = event.itemId
-            }
-
-            ListDetailEvent.DeleteItemDismissed -> {
-                pendingDeleteItemIdFlow.value = null
-            }
-
-            ListDetailEvent.DeleteItemConfirmed -> {
-                val id = pendingDeleteItemIdFlow.value ?: return
-                pendingDeleteItemIdFlow.value = null
-                viewModelScope.launch {
-                    deleteShoppingItem(id)
-                }
-            }
-
-            is ListDetailEvent.PurchaseToggled -> {
-                viewModelScope.launch {
-                    toggleShoppingItemPurchased(event.itemId)
-                }
-            }
-
-            is ListDetailEvent.SortModeSelected -> {
-                viewModelScope.launch {
-                    changeItemsSortMode(listId, event.mode)
-                }
-            }
-
-            ListDetailEvent.DeleteAllItemsConfirmed -> {
-                viewModelScope.launch {
-                    deleteAllShoppingItems(listId)
-                }
-            }
-
-            ListDetailEvent.ClearPurchasedConfirmed -> {
-                viewModelScope.launch {
-                    clearPurchasedShoppingItems(listId)
-                }
-            }
-
-            is ListDetailEvent.ItemMoved -> {
-                reorderItems(event.fromIndex, event.toIndex)
-            }
-
-            ListDetailEvent.BackClicked -> Unit
+        if (!handleFormEvent(event)) {
+            handleItemsEvent(event)
         }
+    }
+
+    /** Обрабатывает события формы добавления/редактирования. Возвращает true, если событие обработано. */
+    private fun handleFormEvent(event: ListDetailEvent): Boolean {
+        when (event) {
+            ListDetailEvent.AddItemClicked -> formFlow.value = ItemFormState(mode = FormMode.Create)
+            ListDetailEvent.FormClosed -> formFlow.value = null
+            ListDetailEvent.FormSubmitted -> submitForm()
+            is ListDetailEvent.NameChanged -> formFlow.update { it?.copy(name = event.name) }
+            is ListDetailEvent.SuggestionSelected -> formFlow.update {
+                it?.copy(name = event.suggestion, suggestions = emptyList())
+            }
+            is ListDetailEvent.QuantityChanged -> formFlow.update {
+                it?.copy(quantity = sanitizeQuantityInput(event.quantity))
+            }
+            ListDetailEvent.QuantityIncreased -> formFlow.update {
+                it?.copy(quantity = stepQuantity(it.quantity, 1))
+            }
+            ListDetailEvent.QuantityDecreased -> formFlow.update {
+                it?.copy(quantity = stepQuantity(it.quantity, -1))
+            }
+            ListDetailEvent.UnitPickerOpened -> formFlow.update { it?.copy(unitPickerVisible = true) }
+            ListDetailEvent.UnitPickerClosed -> formFlow.update { it?.copy(unitPickerVisible = false) }
+            is ListDetailEvent.UnitSelected -> formFlow.update {
+                it?.copy(unit = event.unit, unitPickerVisible = false)
+            }
+            is ListDetailEvent.EditItemClicked -> openEdit(event.itemId)
+            else -> return false
+        }
+        return true
+    }
+
+    private fun handleItemsEvent(event: ListDetailEvent) {
+        when (event) {
+            is ListDetailEvent.DeleteItemClicked -> pendingDeleteItemIdFlow.value = event.itemId
+            ListDetailEvent.DeleteItemDismissed -> pendingDeleteItemIdFlow.value = null
+            ListDetailEvent.DeleteItemConfirmed -> confirmDeleteItem()
+            is ListDetailEvent.PurchaseToggled -> launch {
+                interactors.toggleShoppingItemPurchased(event.itemId)
+            }
+            is ListDetailEvent.SortModeSelected -> launch {
+                interactors.changeItemsSortMode(listId, event.mode)
+            }
+            ListDetailEvent.DeleteAllItemsConfirmed -> launch { interactors.deleteAllShoppingItems(listId) }
+            ListDetailEvent.ClearPurchasedConfirmed -> launch { interactors.clearPurchasedShoppingItems(listId) }
+            is ListDetailEvent.ItemMoved -> reorderItems(event.fromIndex, event.toIndex)
+            else -> Unit
+        }
+    }
+
+    private fun launch(block: suspend () -> Unit) {
+        viewModelScope.launch { block() }
+    }
+
+    private fun confirmDeleteItem() {
+        val id = pendingDeleteItemIdFlow.value ?: return
+        pendingDeleteItemIdFlow.value = null
+        launch { interactors.deleteShoppingItem(id) }
     }
 
     private fun submitForm() {
@@ -240,8 +172,8 @@ class ListDetailViewModel(
 
         formFlow.value = null
 
-        viewModelScope.launch {
-            saveShoppingItem(
+        launch {
+            interactors.saveShoppingItem(
                 listId = listId,
                 itemId = itemId,
                 name = form.name,
@@ -268,49 +200,6 @@ class ListDetailViewModel(
         list.add(to, item)
         latestItems = list
 
-        viewModelScope.launch {
-            moveShoppingItem(list.map { it.id })
-        }
-    }
-
-    private fun sanitizeQuantityInput(input: String): String {
-        val trimmed = input.trim()
-        val decimal = trimmed.replace(',', '.').toBigDecimalOrNull()
-        if (decimal != null && decimal <= BigDecimal.ZERO) {
-            return ""
-        }
-        return trimmed
-    }
-
-    private fun stepQuantity(currentText: String, step: Int): String {
-        val current = currentText.replace(',', '.').toBigDecimalOrNull() ?: BigDecimal.ZERO
-        val result = current + BigDecimal(step)
-        return if (result <= BigDecimal.ZERO) {
-            ""
-        } else {
-            result.stripTrailingZeros().toPlainString()
-        }
-    }
-
-    private fun ShoppingItem.toUi(): ShoppingItemUi {
-        return ShoppingItemUi(
-            id = id,
-            name = name,
-            quantity = quantity?.toString().orEmpty(),
-            unit = unit?.toUnitKey(),
-            isPurchased = isPurchased,
-        )
-    }
-
-    private fun com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.toUnitKey(): String {
-        return when (this) {
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.PIECES -> ItemUnitUi.PIECE.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.KILOGRAMS -> ItemUnitUi.KILOGRAM.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.GRAMS -> ItemUnitUi.GRAM.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.LITERS -> ItemUnitUi.LITER.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.MILLILITERS -> ItemUnitUi.MILLILITER.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.PACKAGE -> ItemUnitUi.PACKAGE.key
-            com.example.shoppinglist.core.domain.listdetail.MeasurementUnit.PACK -> ItemUnitUi.PACK.key
-        }
+        launch { interactors.moveShoppingItem(list.map { it.id }) }
     }
 }

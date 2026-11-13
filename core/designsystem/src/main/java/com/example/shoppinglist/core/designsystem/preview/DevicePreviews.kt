@@ -8,8 +8,6 @@ import androidx.compose.ui.tooling.preview.Preview
     AnnotationTarget.FUNCTION,
 )
 @Retention(AnnotationRetention.BINARY)
-
-// Маленький смартфон
 @Preview(
     name = "Маленький смартфон — светлая",
     group = "Светлая тема",
@@ -26,8 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
 )
-
-// Маленький смартфон горизонтально
 @Preview(
     name = "Маленький горизонтально — светлая",
     group = "Светлая тема",
@@ -44,8 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
 )
-
-// Обычный смартфон
 @Preview(
     name = "Обычный смартфон — светлая",
     group = "Светлая тема",
@@ -62,8 +56,6 @@ import androidx.compose.ui.tooling.preview.Preview
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
 )
-
-// Обычный смартфон горизонтально
 @Preview(
     name = "Обычный горизонтально — светлая",
     group = "Светлая тема",
@@ -80,8 +72,6 @@ import androidx.compose.ui.tooling.preview.Preview
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
 )
-
-// Планшет
 @Preview(
     name = "Планшет — светлая",
     group = "Светлая тема",
